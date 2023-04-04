@@ -11,24 +11,30 @@ from app import app
 from models import db, User, Post, Comment, Like
 
 print("Seeding users...")
-
-
+users = [
+    {
+        'first_name': 'John',
+        'last_name': 'Doe',
+        'user_name': 'johndoe',
+        'password': 'password',
+        'email': 'johndoe@gmail.com'
+    }
+]
 def make_users():
     User.query.delete()
     
-    users = []
-    
-    for i in range(10):
+    for i in range(len(users)):
         user = User(
-            first_name=fake.first_name(),
-            last_name=fake.last_name(),
-            user_name=fake.user_name(),
-            email=fake.email(),
-            password=fake.password(),
+            id=i+1,
+            first_name=users[i]['first_name'], 
+            last_name=users[i]['last_name'],
+            user_name=users[i]['user_name'],
+            email=users[i]['email'],
         )
-        users.append(user)
+        user.password = users[i]['password']
+        db.session.add(user)
 
-    db.session.add_all(users)
+    
     db.session.commit()
 
 
@@ -40,6 +46,7 @@ def make_posts():
     
     for i in range(10):
         post = Post(
+            id = i + 1,
             text=fake.text(),
             author_id=randint(1, 10),
         )
@@ -57,6 +64,7 @@ def make_comments():
     
     for i in range(10):
         comment = Comment(
+            id = i + 1,
             text=fake.text(),
             author_id=randint(1, 10),
             post_id=randint(1, 10),
@@ -74,6 +82,7 @@ def make_likes():
     
     for i in range(100):
         like = Like(
+            id = i + 1,
             author_id=randint(1, 10),
             post_id=randint(1, 10),
         )
