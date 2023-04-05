@@ -18,7 +18,7 @@ def make_users():
     
     users = []
     
-    for i in range(10):
+    for i in range(20):
         user = User(
             first_name=fake.first_name(),
             last_name=fake.last_name(),

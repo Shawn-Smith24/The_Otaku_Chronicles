@@ -7,6 +7,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy_serializer import SerializerMixin
 import re 
 
+
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt()
 
@@ -19,16 +20,16 @@ db = SQLAlchemy(metadata=metadata)
 # Models go here!
 
 class User(db.Model, SerializerMixin):
-    serialize_rules = ('-posts.users', '-comments.users', '-likes.users')
+    serialize_only = ('id', 'first_name', 'last_name', 'user_name', 'email', 'posts', 'comments', 'likes')
     
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50), unique=True)
-    last_name = db.Column(db.String(50), unique=True)
-    user_name = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(50), unique=True)
-    email = db.Column(db.String(50), unique=True)
+    first_name = db.Column(db.String(50), nullable= False, unique=True)
+    last_name = db.Column(db.String(50), nullable= False, unique=True)
+    user_name = db.Column(db.String(50), nullable= False, unique=True)
+    password = db.Column(db.String(50), nullable= False, unique=True)
+    email = db.Column(db.String(50), nullable= False, unique=True)
     
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -41,7 +42,7 @@ class User(db.Model, SerializerMixin):
         return f'User : {self.user_name}'
     
 class Post(db.Model, SerializerMixin):
-    serialize_rules = ('-users.posts', '-comments.post', '-likes.post')
+    serialize_only = ('id', 'text', 'author_id', 'comments', 'likes')
     
     __tablename__ = 'posts'
     
@@ -61,7 +62,8 @@ class Post(db.Model, SerializerMixin):
     
     
 class Like(db.Model, SerializerMixin):
-    serialize_rules = ('-posts.likes', '-users.likes')
+    serialize_only = ('id', 'post_id', 'author_id')
+    
     __tablename__ = 'likes'
     
     id = db.Column(db.Integer, primary_key=True)
@@ -78,8 +80,8 @@ class Like(db.Model, SerializerMixin):
 
 
 class Comment(db.Model, SerializerMixin):
-
-    serialize_rules = ('-posts.comments', '-users.comments')
+    serialize_only = ('id', 'text', 'author_id', 'post_id')
+    
     
     __tablename__ = 'comments'
     
