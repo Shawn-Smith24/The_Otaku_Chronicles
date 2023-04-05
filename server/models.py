@@ -20,7 +20,7 @@ db = SQLAlchemy(metadata=metadata)
 # Models go here!
 
 class User(db.Model, SerializerMixin):
-    serialize_only = ( 'first_name', 'last_name', 'user_name', 'email', 'password')
+    serialize_only = ( 'first_name', 'last_name', 'user_name', 'email', 'password', 'posts')
     
     __tablename__ = 'users'
     
@@ -48,7 +48,7 @@ class Post(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(500), nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    author_id = db.Column(db.String, db.ForeignKey('users.id'))
     
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())

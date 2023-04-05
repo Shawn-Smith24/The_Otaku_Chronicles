@@ -5,6 +5,7 @@ from flask_restful import Api, Resource
 from models import db, User, Post, Comment, Like
 from werkzeug.exceptions import NotFound, Unauthorized
 from flask_bcrypt import Bcrypt
+import requests
 
 
 
@@ -92,6 +93,22 @@ class UsersByID(Resource):
         )
         
         return response
+    
+    def delete(self, id):
+        user = User.query.filter_by(id=id).first()
+        
+        if not user:
+            abort(404, 'User not found')
+            
+        db.session.delete(user)
+        db.session.commit()
+        
+        response = make_response(
+            '',
+            204,
+        )
+        
+        return response
 
 class Posts(Resource):
     def get(self):
@@ -104,9 +121,69 @@ class Posts(Resource):
         )
 
         return response
+    
+    def post(self):
+        data = request.get_json()
+        new_post = Post(
+            text=data['text'],
+            author_id=data['author_id'],
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        return new_post.to_dict()
+    
+    
 
 class PostsByID(Resource):
-    pass
+    def get(self, id):
+        post = Post.query.filter_by(id=id).first()
+        
+        if not post:
+            abort(404, 'Post not found')
+            
+        post_dict = post.to_dict()
+        
+        response = make_response(
+            jsonify(post_dict),
+            200
+        )
+        return response
+    
+    def patch(self, id):
+        post = Post.query.filter_by(id=id).first()
+        
+        if not post:
+            abort(404, 'Post not found')
+            
+        data = request.get_json()
+        for key in data:
+            setattr(post, key, data[key])
+            
+        db.session.add(post)
+        db.session.commit()
+        
+        response = make_response(
+            post.to_dict(),
+            200,
+        )
+        
+        return response
+    
+    def delete(self, id):
+        post = Post.query.filter_by(id=id).first()
+        
+        if not post:
+            abort(404, 'Post not found')
+            
+        db.session.delete(post)
+        db.session.commit()
+        
+        response = make_response(
+            '',
+            204,
+        )
+        
+        return response
 
 class Comments(Resource):
     def get(self):
@@ -119,10 +196,68 @@ class Comments(Resource):
         )
 
         return response
+    
+    def post(self):
+        data = request.get_json()
+        new_comment = Comment(
+            text=data['text'],
+            author_id=data['author_id'],
+            post_id=data['post_id'],
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+        return new_comment.to_dict()
 
 class CommentsByID(Resource):
-    pass
+    def get(self,id):
+        comment = Comment.query.filter_by(id=id).first()
+        
+        if not comment:
+            abort(404, 'Comment not found')
+            
+        comment_dict = comment.to_dict()
+        
+        response = make_response(
+            jsonify(comment_dict),
+            200
+        )
+        return response
 
+    def patch(self, id):
+        comment = Comment.query.filter_by(id=id).first()
+        
+        if not comment:
+            abort(404, 'Comment not found')
+            
+        data = request.get_json()
+        for key in data:
+            setattr(comment, key, data[key])
+            
+        db.session.add(comment)
+        db.session.commit()
+        
+        response = make_response(
+            comment.to_dict(),
+            200,
+        )
+        
+        return response
+    
+    def delete(self, id):
+        comment = Comment.query.filter_by(id=id).first()
+        
+        if not comment:
+            abort(404, 'Comment not found')
+            
+        db.session.delete(comment)
+        db.session.commit()
+        
+        response = make_response(
+            '',
+            204,
+        )
+        
+        return response
 class Likes(Resource):
     def get(self):
         likes = Like.query.all()
@@ -134,9 +269,48 @@ class Likes(Resource):
         )
 
         return response
+    
+    def post(self):
+        data = request.get_json()
+        new_like = Like(
+            author_id=data['author_id'],
+            post_id=data['post_id'],
+        )
+        db.session.add(new_like)
+        db.session.commit()
+        return new_like.to_dict()
 
 class LikesByID(Resource):
-    pass
+    def get(self,id):
+        like = Like.query.filter_by(id=id).first()
+        
+        if not like:
+            abort(404, 'Like not found')
+            
+        like_dict = like.to_dict()
+        
+        response = make_response(
+            jsonify(like_dict),
+            200
+        )
+        return response
+    
+    
+    def delete(self, id):
+        like = Like.query.filter_by(id=id).first()
+        
+        if not like:
+            abort(404, 'Like not found')
+            
+        db.session.delete(like)
+        db.session.commit()
+        
+        response = make_response(
+            '',
+            204,
+        )
+        
+        return response
 
     
 #signup route
@@ -174,6 +348,18 @@ class Login(Resource):
         except:
             abort(401, "Incorrect Email or Password")
 
+
+class AuthorizedSession(Resource):
+    def get(self):
+        try:
+            user = User.query.filter_by(id=session['user_id']).first()
+            response = make_response(
+                user.to_dict(),
+                200
+            )
+            return response
+        except:
+            abort(401, "Unauthorized")
 #logout route
 class Logout(Resource):
     def delete(self):
@@ -185,6 +371,7 @@ class Logout(Resource):
     
   
 #Routes for Resources
+api.add_resource(AuthorizedSession, '/authorized')
 api.add_resource(Logout, '/logout')
 api.add_resource(Login, '/login')
 api.add_resource(Signup, '/signup')
@@ -199,6 +386,26 @@ api.add_resource(Users, '/users')
 api.add_resource(Home, '/home')
 
 
+
+
+
+
+##Anime API
+
+url = 'https://anime-db.p.rapidapi.com/anime'
+
+querystring= {'page': '1', 'size': '50', 'search' : '', 'genre': '', 'sortBy': 'title or ranking', 'sortOrder': 'asc or desc' }
+
+headers = {
+    "X-RapidAPI-Key": "bbea158bcamsh248f6e9aab2d052p1b7f5fjsne6b8ab07a484",
+	"X-RapidAPI-Host": "anime-db.p.rapidapi.com"
+}
+
+response = requests.request("GET", url, headers=headers, params=querystring)
+
+print("Anime API is working!")
+
+
 @app.errorhandler(NotFound)
 def handle_not_found(e):
     response = make_response(
@@ -208,4 +415,4 @@ def handle_not_found(e):
 
     return response
 if __name__ == '__main__':
-    app.run(port=5555, debug=True)
+    app.run(port=5550, debug=True)
