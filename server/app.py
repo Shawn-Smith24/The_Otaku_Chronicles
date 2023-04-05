@@ -387,25 +387,6 @@ api.add_resource(Home, '/home')
 
 
 
-
-
-
-##Anime API
-
-url = 'https://anime-db.p.rapidapi.com/anime'
-
-querystring= {'page': '1', 'size': '50', 'search' : '', 'genre': '', 'sortBy': 'title or ranking', 'sortOrder': 'asc or desc' }
-
-headers = {
-    "X-RapidAPI-Key": "bbea158bcamsh248f6e9aab2d052p1b7f5fjsne6b8ab07a484",
-	"X-RapidAPI-Host": "anime-db.p.rapidapi.com"
-}
-
-response = requests.request("GET", url, headers=headers, params=querystring)
-
-print("Anime API is working!")
-
-
 @app.errorhandler(NotFound)
 def handle_not_found(e):
     response = make_response(
