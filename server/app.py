@@ -72,6 +72,26 @@ class UsersByID(Resource):
             200
         )
         return response
+    
+    def patch(self, id):
+        user = User.query.filter_by(id=id).first()
+        
+        if not user:
+            abort(404, 'User not found')
+            
+        data = request.get_json()
+        for key in data:
+            setattr(user, key, data[key])
+            
+        db.session.add(user)
+        db.session.commit()
+        
+        response = make_response(
+            user.to_dict(),
+            200,
+        )
+        
+        return response
 
 class Posts(Resource):
     def get(self):

@@ -20,7 +20,7 @@ db = SQLAlchemy(metadata=metadata)
 # Models go here!
 
 class User(db.Model, SerializerMixin):
-    serialize_only = ('id', 'first_name', 'last_name', 'user_name', 'email', 'posts', 'comments', 'likes')
+    serialize_only = ( 'first_name', 'last_name', 'user_name', 'email', 'password')
     
     __tablename__ = 'users'
     
@@ -39,7 +39,7 @@ class User(db.Model, SerializerMixin):
     likes = db.relationship('Like', backref='users')
     
     def __repr__(self):
-        return f'User : {self.user_name}'
+        return f'User : {self.user_name}, {self.email}'
     
 class Post(db.Model, SerializerMixin):
     serialize_only = ('id', 'text', 'author_id', 'comments', 'likes')

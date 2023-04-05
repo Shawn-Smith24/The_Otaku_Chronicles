@@ -10,6 +10,12 @@ from faker import Faker
 from app import app
 from models import db, User, Post, Comment, Like
 
+
+#db lists
+
+
+
+
 print("Seeding users...")
 
 
@@ -18,7 +24,7 @@ def make_users():
     
     users = []
     
-    for i in range(20):
+    for i in range(10):
         user = User(
             first_name=fake.first_name(),
             last_name=fake.last_name(),
