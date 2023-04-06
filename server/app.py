@@ -371,19 +371,19 @@ class Logout(Resource):
     
   
 #Routes for Resources
-api.add_resource(AuthorizedSession, '/authorized')
-api.add_resource(Logout, '/logout')
-api.add_resource(Login, '/login')
-api.add_resource(Signup, '/signup')
+api.add_resource(AuthorizedSession, '/authorized', endpoint='authorized')
+api.add_resource(Logout, '/logout', endpoint='logout')
+api.add_resource(Login, '/login', endpoint='login')
+api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(LikesByID, '/likes/<int:id>')
-api.add_resource(Likes, '/likes')
-api.add_resource(CommentsByID, '/comments/<int:id>')
-api.add_resource(Comments, '/comments')
-api.add_resource(PostsByID, '/posts/<int:id>')
-api.add_resource(Posts, '/posts')
-api.add_resource(UsersByID, '/users/<int:id>')   
-api.add_resource(Users, '/users')  
-api.add_resource(Home, '/home')
+api.add_resource(Likes, '/likes', endpoint='likes')
+api.add_resource(CommentsByID, '/comments/<int:id>', endpoint='comment')
+api.add_resource(Comments, '/comments', endpoint='comments')
+api.add_resource(PostsByID, '/posts/<int:id>', endpoint='post')
+api.add_resource(Posts, '/posts', endpoint='posts')
+api.add_resource(UsersByID, '/users/<int:id>', endpoint='user')   
+api.add_resource(Users, '/users', endpoint='users')  
+api.add_resource(Home, '/home', endpoint='home')
 
 
 
@@ -396,4 +396,4 @@ def handle_not_found(e):
 
     return response
 if __name__ == '__main__':
-    app.run(port=5550, debug=True)
+    app.run(port=5555, debug=True)

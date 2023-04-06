@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../Components/NavBar";
 
 
 function WelcomePage(){
 
     return(
-        <div></div>
+        <div>
+            <NavBar />
+        </div>
     )
 }
 
