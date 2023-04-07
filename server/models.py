@@ -20,7 +20,7 @@ db = SQLAlchemy(metadata=metadata)
 # Models go here!
 
 class User(db.Model, SerializerMixin):
-    serialize_only = ( 'first_name', 'last_name', 'user_name', 'email', 'password', 'posts')
+    serialize_only = ( 'first_name', 'last_name', 'user_name', 'email', 'posts')
     
     __tablename__ = 'users'
     
@@ -28,7 +28,7 @@ class User(db.Model, SerializerMixin):
     first_name = db.Column(db.String(50), nullable= False, unique=True)
     last_name = db.Column(db.String(50), nullable= False, unique=True)
     user_name = db.Column(db.String(50), nullable= False, unique=True)
-    password = db.Column(db.String(50), nullable= False, unique=True)
+    password_hash = db.Column(db.String(50), unique=True)
     email = db.Column(db.String(50), nullable= False, unique=True)
     
     created_at = db.Column(db.DateTime, server_default=db.func.now())
@@ -38,6 +38,15 @@ class User(db.Model, SerializerMixin):
     comments = db.relationship('Comment', backref='users')
     likes = db.relationship('Like', backref='users')
     
+    
+    def __init__(self, first_name, last_name, user_name, email, password_hash):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.user_name = user_name
+        self.email = email
+        self.password_hash = password_hash
+        
+        
     def __repr__(self):
         return f'User : {self.user_name}, {self.email}'
     
@@ -101,13 +110,14 @@ class User(db.Model, SerializerMixin):
         return email
     
 class Post(db.Model, SerializerMixin):
-    serialize_only = ('id', 'text', 'author_id', 'comments', 'likes')
+    serialize_only = ('id', 'text', 'subject', 'username', 'comments', 'likes')
     
     __tablename__ = 'posts'
     
     id = db.Column(db.Integer, primary_key=True)
+    subject = db.Column(db.String, default='Enter a description for your post')
     text = db.Column(db.String(500), nullable=False)
-    author_id = db.Column(db.String, db.ForeignKey('users.id'))
+    username = db.Column(db.String(50) , db.ForeignKey('users.user_name'))
     
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -116,6 +126,11 @@ class Post(db.Model, SerializerMixin):
     comments = db.relationship('Comment', backref='posts')
     likes = db.relationship('Like', backref='posts')
     
+    def __init__(self, subject, username, text):
+        self.subject = subject
+        self.username = username
+        self.text = text
+
     def __repr__(self):
         return f'Post : {self.text}'
     
@@ -132,14 +147,14 @@ class Post(db.Model, SerializerMixin):
     
     
 class Like(db.Model, SerializerMixin):
-    serialize_only = ('id', 'post_id', 'author_id')
+    serialize_only = ('id', 'post_id', 'username')
     
     __tablename__ = 'likes'
     
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    
+    username = db.Column(db.String(50) , db.ForeignKey('users.user_name'))
+
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     
@@ -150,7 +165,7 @@ class Like(db.Model, SerializerMixin):
 
 
 class Comment(db.Model, SerializerMixin):
-    serialize_only = ('id', 'text', 'author_id', 'post_id')
+    serialize_only = ('id', 'text', 'username', 'post_id')
     
     
     __tablename__ = 'comments'
@@ -158,11 +173,17 @@ class Comment(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(500), nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    username = db.Column(db.String(50) , db.ForeignKey('users.user_name'))
+
+    
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
     
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
+    def __init__(self, text, username):
+        self.username = username
+        self.text = text
 
     @validates('text')
     def validate_text(self, key, text):

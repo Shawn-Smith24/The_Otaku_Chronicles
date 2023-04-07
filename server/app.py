@@ -25,13 +25,7 @@ db.init_app(app)
 api = Api(app)
 
 # Views go here!
-
-
-class Home(Resource):
-    def get(self):
-        return {'message': 'Welcome to Goal Oriented Social Media!'}
-    
-    
+   
 class Users(Resource):
 
     def get(self):
@@ -53,7 +47,7 @@ class Users(Resource):
             last_name=data['last_name'],
             user_name=data['user_name'],
             email=data['email'],
-            password=data['password'],
+            password_hash=data['password_hash'],
         )
         db.session.add(new_user)
         db.session.commit()
@@ -125,8 +119,9 @@ class Posts(Resource):
     def post(self):
         data = request.get_json()
         new_post = Post(
+            subject=data['subject'],
             text=data['text'],
-            author_id=data['author_id'],
+            username=data['username'],
         )
         db.session.add(new_post)
         db.session.commit()
@@ -201,7 +196,7 @@ class Comments(Resource):
         data = request.get_json()
         new_comment = Comment(
             text=data['text'],
-            author_id=data['author_id'],
+            username=data['username'],
             post_id=data['post_id'],
         )
         db.session.add(new_comment)
@@ -273,7 +268,7 @@ class Likes(Resource):
     def post(self):
         data = request.get_json()
         new_like = Like(
-            author_id=data['author_id'],
+            username=data['username'],
             post_id=data['post_id'],
         )
         db.session.add(new_like)
@@ -319,7 +314,7 @@ class Signup(Resource):
         form_json = request.get_json()
         print(form_json)
         new_user = User(first_name=form_json['first_name'], last_name=form_json['last_name'], user_name= form_json['user_name'], email=form_json['email'])
-        new_user.password = form_json['password']  # Use the password setter property
+        new_user.password_hash = form_json['password_hash']  # Use the password_hash setter property
         db.session.add(new_user)
         db.session.commit()
         response = make_response(
@@ -335,18 +330,18 @@ class Login(Resource):
             user = User.query.filter_by(email=request.get_json()['email']).first()
             if user == None: 
                 return make_response("this email does not exist", 404)
-            print(user.authenticate(request.get_json()['password']))
-            if user and user.authenticate(request.get_json()['password']):
+            print(user.authenticate(request.get_json()['password_hash']))
+            if user and user.authenticate(request.get_json()['password_hash']):
                 session['user_id'] = user.id
                 response = make_response(
                     user.to_dict(),
                     200
             ) 
             else: 
-                response = make_response("incorrect password",404)
+                response = make_response("incorrect password_hash",404)
             return response
         except:
-            abort(401, "Incorrect Email or Password")
+            abort(401, "Incorrect Email or password_hash")
 
 
 class AuthorizedSession(Resource):
@@ -381,9 +376,9 @@ api.add_resource(CommentsByID, '/comments/<int:id>', endpoint='comment')
 api.add_resource(Comments, '/comments', endpoint='comments')
 api.add_resource(PostsByID, '/posts/<int:id>', endpoint='post')
 api.add_resource(Posts, '/posts', endpoint='posts')
-api.add_resource(UsersByID, '/users/<int:id>', endpoint='user')   
+api.add_resource(UsersByID, '/users/<int:id>', endpoint='usersId')   
 api.add_resource(Users, '/users', endpoint='users')  
-api.add_resource(Home, '/home', endpoint='home')
+
 
 
 

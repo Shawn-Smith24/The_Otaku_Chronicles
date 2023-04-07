@@ -27,7 +27,7 @@ if __name__ == '__main__':
             last_name = 'Kusakabe',
             user_name = 'devilsfootprints',
             email = 'shinnygod@gmail.com',
-            password = 'password1'
+            password_hash = 'password1'
         
             )
         ]
@@ -37,8 +37,9 @@ if __name__ == '__main__':
         print("Seeding posts...")
         posts = [
             Post(
+                subject = 'My first post',
                 text = 'I am the best',
-                author_id = 1
+                username = 'devilsfootprints'
             ), 
         ]
         db.session.add_all(posts)

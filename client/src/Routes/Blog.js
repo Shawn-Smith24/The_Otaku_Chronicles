@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Posts from "../Components/Posts";
 
-function Blog({user, posts}){
+function Blog({users, posts}){
 
     return(
         <div>
             <ul className="Posts">{posts.map(post => 
                 <Posts 
-                user = {user}
+                users = {users}
                 post = {post}
                 />)}
             </ul>
