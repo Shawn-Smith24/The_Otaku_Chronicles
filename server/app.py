@@ -377,7 +377,7 @@ api.add_resource(Comments, '/comments', endpoint='comments')
 api.add_resource(PostsByID, '/posts/<int:id>', endpoint='post')
 api.add_resource(Posts, '/posts', endpoint='posts')
 api.add_resource(UsersByID, '/users/<int:id>', endpoint='usersId')   
-api.add_resource(Users, '/users', endpoint='users')  
+api.add_resource(Users, '/users/', endpoint='users')  
 
 
 
