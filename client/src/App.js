@@ -11,6 +11,7 @@ function App() {
   const [users, setUsers] = useState([]);
   const [anime, setAnime] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [likes, setLikes] = useState(0);
 
 
 // Anime API Functionality
@@ -30,7 +31,7 @@ function App() {
 
   //Fetch User Functionality
   useEffect(() => {
-    fetch(`/users`, 
+    fetch (`/users`, 
       {method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -54,14 +55,31 @@ function App() {
       .catch(err => console.error(err));
   }, []);
 
+
+// Likes Functionality
+useEffect(() => {
+  fetch (`/likes`, 
+    {method: 'GET',
+    headers: {
+      Accept: 'application/json',
+    },
+  },)
+    .then(res => res.json())
+    .then(likes => setLikes(likes))
+    .catch(err => console.error(err));
+}, []);
+
+  function addLikes(likesToAdd) {
+    setLikes(likes.map(like => like.id === likesToAdd.id? likesToAdd : like))
+  }
   
   return(
     <div className="app">
         <WelcomePage />
-        <Blog users= {users} posts = {posts}/>
+        <Blog users= {users} posts = {posts} likes={likes} addLikes={addLikes}/>
         <Login setUser = {setUsers}/>
         <Signup setUser = {setUsers} />
-        <Anime user= {users} />
+        <Anime users= {users} />
            
     </div>
   )
