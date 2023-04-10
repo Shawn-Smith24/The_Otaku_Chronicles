@@ -2,7 +2,7 @@ from flask import Flask, make_response, request, abort, jsonify, session
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_restful import Api, Resource
-from models import db, User, Post, Comment, Like
+from models import db, User, Post, Comment, Like, Anime
 from werkzeug.exceptions import NotFound, Unauthorized
 from flask_bcrypt import Bcrypt
 import requests
@@ -307,13 +307,87 @@ class LikesByID(Resource):
         
         return response
 
+class Animes(Resource):
+    def get(self):
+        animes = Anime.query.all()
+        anime_dict = [anime.to_dict() for anime in animes]
+
+        response = make_response(
+            jsonify(anime_dict),
+            200,
+        )
+
+        return response
     
+    def post(self):
+        data = request.get_json()
+        new_anime = Anime(
+            title=data['title'],
+            description=data['description'],
+            image_url=data['image_url'],
+            genre=data['genre']
+        )
+        db.session.add(new_anime)
+        db.session.commit()
+        return new_anime.to_dict()
+    
+    
+class AnimesByID(Resource):
+    def get(self,id):
+        anime = Anime.query.filter_by(id=id).first()
+        
+        if not anime:
+            abort(404, 'Anime not found')
+            
+        anime_dict = anime.to_dict()
+        
+        response = make_response(
+            jsonify(anime_dict),
+            200
+        )
+        return response
+    
+    def patch(self, id):
+        anime = Anime.query.filter_by(id=id).first()
+        
+        if not anime:
+            abort(404, 'Anime not found')
+            
+        data = request.get_json()
+        for key in data:
+            setattr(anime, key, data[key])
+            
+        db.session.add(anime)
+        db.session.commit()
+        
+        response = make_response(
+            anime.to_dict(),
+            200,
+        )
+        
+        return response
+    
+    def delete(self, id):
+        anime = Anime.query.filter_by(id=id).first()
+        
+        if not anime:
+            abort(404, 'Anime not found')
+            
+        db.session.delete(anime)
+        db.session.commit()
+        
+        response = make_response(
+            '',
+            204,
+        )
+        
+        return response
 #signup route
 class Signup(Resource):
     def post(self):
         form_json = request.get_json()
         print(form_json)
-        new_user = User(first_name=form_json['first_name'], last_name=form_json['last_name'], user_name= form_json['user_name'], email=form_json['email'])
+        new_user = User(first_name=form_json['first_name'], last_name=form_json['last_name'], user_name= form_json['user_name'], email=form_json['email'], password_hash=form_json['password_hash'])
         new_user.password_hash = form_json['password_hash']  # Use the password_hash setter property
         db.session.add(new_user)
         db.session.commit()
@@ -325,7 +399,7 @@ class Signup(Resource):
 
 #login route
 class Login(Resource):
-    def post(self):
+    def get(self):
         try:
             user = User.query.filter_by(email=request.get_json()['email']).first()
             if user == None: 
@@ -370,6 +444,8 @@ api.add_resource(AuthorizedSession, '/authorized', endpoint='authorized')
 api.add_resource(Logout, '/logout', endpoint='logout')
 api.add_resource(Login, '/login', endpoint='login')
 api.add_resource(Signup, '/signup', endpoint='signup')
+api.add_resource(AnimesByID, '/anime/<int:id>', endpoint='animeID')
+api.add_resource(Animes, '/anime', endpoint='anime')
 api.add_resource(LikesByID, '/likes/<int:id>')
 api.add_resource(Likes, '/likes', endpoint='likes')
 api.add_resource(CommentsByID, '/comments/<int:id>', endpoint='comment')

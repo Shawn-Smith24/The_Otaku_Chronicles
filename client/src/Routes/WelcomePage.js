@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../Components/NavBar";
-
+import './WelcomePage.css'
 
 function WelcomePage(){
 
     return(
-        <div>
-            <NavBar />
+        <div className="welcome">
+            Welcome to The Otaku Chronicles!
         </div>
     )
 }

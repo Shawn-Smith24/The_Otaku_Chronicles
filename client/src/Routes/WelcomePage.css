@@ -1,0 +1,9 @@
+.welcome{
+    background-color: #f5f5f5;
+    height: 300px;
+    width: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
