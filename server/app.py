@@ -1,4 +1,4 @@
-from flask import Flask, make_response, request, abort, jsonify, session, url_for, redirect, flash
+from flask import Flask, make_response, request, abort, jsonify, session, url_for, redirect, flash, render_template
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_restful import Api, Resource
@@ -388,17 +388,39 @@ class AnimesByID(Resource):
 #signup route
 class Signup(Resource):
     def post(self):
-        form_json = request.get_json()
-        print(form_json)
-        new_user = User(first_name=form_json['first_name'], last_name=form_json['last_name'], user_name= form_json['user_name'], email=form_json['email'], password_hash=form_json['password_hash'])
-        new_user.password_hash = form_json['password_hash']  # Use the password_hash setter property
-        db.session.add(new_user)
-        db.session.commit()
-        response = make_response(
-            new_user.to_dict(),
-            201
-        )
-        return response
+        request_json = request.json()
+        if request.method == 'POST':
+            name = request.form.get("name")
+            email = request.form.get("email")
+            user_name = request.form.get("user_name")
+            password_hash = request.form.get("password_hash")
+            password_hash2 = request.form.get("password_hash2")
+
+            email_exists = User.query.filter_by(email=email).first()
+            user_name_exists = User.query.filter_by(user_name=user_name).first()
+            
+            if email_exists:
+                flash("Email already exists", category="error")
+            elif user_name_exists:
+                flash("Username already exists", category="error")
+            elif len(email) < 4:
+                flash ("Email must be greater than 4 characters", category="error")
+            
+            else:
+                new_user = User(
+                    name=name,
+                    user_name= user_name,
+                    email=email,
+                    password_hash1= generate_password_hash(password_hash, method='sha256'),
+                    password_hash2 = generate_password_hash(password_hash2, method='sha256')
+                )
+                db.session.add(new_user)
+                db.session.commit()
+                
+                login_user(new_user, remember=True)
+                flash("Account created!", category="success")
+                return redirect(url_for('anime'))
+            return render_template('SignUp.js', user=current_user)
 
 #login route
 class Login(Resource):
@@ -419,7 +441,7 @@ class Login(Resource):
         
         return redirect(url_for('anime'))
 class AuthorizedSession(Resource):
-    def get(self):
+    def post(self):
         try:
             user = User.query.filter_by(id=session['user_id']).first()
             response = make_response(

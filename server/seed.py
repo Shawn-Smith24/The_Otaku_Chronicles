@@ -23,11 +23,10 @@ if __name__ == '__main__':
         print("Seeding users...")    
         users = [
             User(
-            first_name = 'Shinra',
-            last_name = 'Kusakabe',
-            user_name = 'devilsfootprints',
-            email = 'shinnygod@gmail.com',
-            password_hash = 'password1'
+                name = 'Shinra Kusakabe',
+                user_name = 'devilsfootprints',
+                email = 'shinnygod@gmail.com',
+                password_hash = 'password1'
         
             )
         ]

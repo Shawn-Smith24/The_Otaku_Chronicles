@@ -20,13 +20,12 @@ db = SQLAlchemy(metadata=metadata)
 # Models go here!
 
 class User(db.Model, SerializerMixin):
-    serialize_only = ( 'first_name', 'last_name', 'user_name', 'email', 'posts')
+    serialize_only = ( 'name', 'user_name', 'email', 'posts')
     
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50), nullable= False, unique=True)
-    last_name = db.Column(db.String(50), nullable= False, unique=True)
+    name = db.Column(db.String(50), nullable= False)
     user_name = db.Column(db.String(50), nullable= False, unique=True)
     password_hash = db.Column(db.String(50), unique=True)
     email = db.Column(db.String(50), nullable= False, unique=True)
@@ -40,9 +39,8 @@ class User(db.Model, SerializerMixin):
     anime = db.relationship('Anime', backref='users')
     
     
-    def __init__(self, first_name, last_name, user_name, email, password_hash):
-        self.first_name = first_name
-        self.last_name = last_name
+    def __init__(self, name, user_name, email, password_hash):
+        self.name = name
         self.user_name = user_name
         self.email = email
         self.password_hash = password_hash
@@ -65,27 +63,6 @@ class User(db.Model, SerializerMixin):
     def password(self, password):
         self.set_password(password)
         
-    @validates('first_name')
-    def validate_first_name(self, key, first_name):
-        if not first_name:
-         raise AssertionError('No first_name provided')
-     
-        if not re.match("[a-zA-Z]+", first_name):
-            
-          raise AssertionError('Provided first_name is not an first_name') 
-      
-        return first_name
-    
-    @validates('last_name')
-    def validate_last_name(self, key, last_name):
-        if not last_name:
-         raise AssertionError('No last_name provided')
-     
-        if not re.match("[a-zA-Z]+", last_name):
-            
-          raise AssertionError('Provided last_name is not an last_name') 
-      
-        return last_name    
     
     @validates('user_name')
     def validate_user_name(self, key, user_name):
