@@ -49,7 +49,7 @@ function App() {
           <Route path="/" element={<WelcomePage />} />
           <Route path="/blog" element={<Blog users= {users} posts = {posts} />} />
           <Route path="/login" element={<Login setUser = {setUsers} />} />
-          <Route path="/signup" element={<Signup setUser = {setUsers} />} />
+          <Route path="/signup" element={<Signup users={users} setUser = {setUsers} />} />
           <Route path="/anime" element={<Anime users= {users} />} />
         </Routes>
 

@@ -1,4 +1,4 @@
-from flask import Flask, make_response, request, abort, jsonify, session
+from flask import Flask, make_response, request, abort, jsonify, session, url_for, redirect, flash
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_restful import Api, Resource
@@ -6,6 +6,9 @@ from models import db, User, Post, Comment, Like, Anime
 from werkzeug.exceptions import NotFound, Unauthorized
 from flask_bcrypt import Bcrypt
 import requests
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_wtf import FlaskForm
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 
@@ -399,25 +402,22 @@ class Signup(Resource):
 
 #login route
 class Login(Resource):
-    def get(self):
-        try:
-            user = User.query.filter_by(email=request.get_json()['email']).first()
-            if user == None: 
-                return make_response("this email does not exist", 404)
-            print(user.authenticate(request.get_json()['password_hash']))
-            if user and user.authenticate(request.get_json()['password_hash']):
-                session['user_id'] = user.id
-                response = make_response(
-                    user.to_dict(),
-                    200
-            ) 
-            else: 
-                response = make_response("incorrect password_hash",404)
-            return response
-        except:
-            abort(401, "Incorrect Email or password_hash")
-
-
+    def post(self):
+        email = request.json.get('email')
+        password_hash = request.json.get('password_hash')
+        
+        user = User.query.filter_by(email=email).first()
+        if user:
+            if check_password_hash(user.password_hash, password_hash):
+                flash("Logged in successfully", category="success")
+                login_user(user, remember=True)
+                return redirect(url_for('anime'))
+            else:
+                flash("Incorrect password", category="error")
+        else:
+            flash("User not found", category="error")
+        
+        return redirect(url_for('anime'))
 class AuthorizedSession(Resource):
     def get(self):
         try:
