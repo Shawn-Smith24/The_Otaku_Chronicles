@@ -8,7 +8,7 @@
 
 # Local imports
 from app import app
-from models import db, User, Post, Comment, Like
+from models import db, User, Post, Comment, Like, Anime
 
 if __name__ == '__main__':
     # fake = Faker()
@@ -48,9 +48,21 @@ if __name__ == '__main__':
         comments= []
         db.session.add_all(comments)
         
-        print ("Seeding likes...")
-        likes = []
-        db.session.add_all(likes)
+        # print ("Seeding likes...")
+        # likes = []
+        # db.session.add_all(likes)
+        
+        
+        print("Seeding anime...")
+        animes = [
+            Anime(
+                title = 'Demon Slayer',
+                description= 'Kimetsu no Yaiba, also known as Demon Slayer, follows the story of Tanjiro Kamado and his sister turned demon, Nezuko. Determined to find a way to turn Nezuko back into a human Tanjiro joins the Demon Slayer Corps., a group of swordsman whose purpose is to eliminate all demons, to find the answers he seeks',
+                image_url = 'https://upload.wikimedia.org/wikipedia/en/0/09/Demon_Slayer_-_Kimetsu_no_Yaiba%2C_volume_1.jpg',
+                genre= 'Action, Adventure, Fantasy, Shounen, Supernatural'
+            )
+        ]
+        db.session.add_all(animes)
 
         db.session.commit()
         # Seed code goes here!

@@ -37,6 +37,7 @@ class User(db.Model, SerializerMixin):
     posts = db.relationship('Post', backref='users')
     comments = db.relationship('Comment', backref='users')
     likes = db.relationship('Like', backref='users')
+    anime = db.relationship('Anime', backref='users')
     
     
     def __init__(self, first_name, last_name, user_name, email, password_hash):
@@ -199,3 +200,21 @@ class Comment(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f'Comment : {self.text}'
+    
+    
+class Anime(db.Model, SerializerMixin):
+    serialize_only = ('id', 'title', 'description', 'image_url', 'genre')
+    
+    __tablename__ = 'animes'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(500), nullable=False)
+    image_url = db.Column(db.String(500), nullable=False)
+    genre = db.Column(db.String(50), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    
+    
