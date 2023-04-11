@@ -4,11 +4,10 @@ from flask_cors import CORS
 from flask_restful import Api, Resource
 from models import db, User, Post, Comment, Like, Anime
 from werkzeug.exceptions import NotFound, Unauthorized
-from flask_bcrypt import Bcrypt
 import requests
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from flask_wtf import FlaskForm
-from werkzeug.security import generate_password_hash, check_password_hash
+
+
+
 
 
 
@@ -16,7 +15,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
-bcrypt = Bcrypt(app)
+
 
 app.secret_key = b'@~xH\xf2\x10k\x07hp\x85\xa6N\xde\xd4\xcd'
 
@@ -338,6 +337,8 @@ class Animes(Resource):
     
     
 class AnimesByID(Resource):
+    
+    
     def get(self,id):
         anime = Anime.query.filter_by(id=id).first()
         
@@ -388,80 +389,69 @@ class AnimesByID(Resource):
         
         return response
 #signup route
-class Signup(Resource):
-    def post(self):
-        name = request.get_json().get('name')
-        user_name = request.get_json().get('user_name')
-        email = request.get_json().get('email')
-        password_hash = request.get_json().get('password_hash')
-        
-        #check if user already exists in the db for flask
-        user = User.query.filter_by(email=email).first()
-        
-        if user:
-            flash("User already exists", category="error")
-           
-        
-        new_user = User(
-            name=name, 
-            user_name=user_name, 
-            email=email, 
-            password_hash=generate_password_hash(password_hash, method='sha256'))
-        db.session.add(new_user)
-        db.session.commit()
-        
-        flash("Account created", category="success")
-        
-        return {"message": "Account created"}
-    
-        
-        
 
-#login route
-class Login(Resource):
-    def post(self):
-        email = request.json.get('email')
-        password_hash = request.json.get('password_hash')
-        
-        user = User.query.filter_by(email=email).first()
-        if user:
-            if check_password_hash(user.password_hash, password_hash):
-                flash("Logged in successfully", category="success")
-                
-                return {"message": "Logged in successfully"}
-            else:
-                flash("Incorrect password", category="error")
-        else:
-            flash("User not found", category="error")
-        
-        return {"message": "Invalid credentials"}
+
+
+
+@app.route('/signup', methods=['POST'])
+def signup():
     
-class AuthorizedSession(Resource):
-    def post(self):
-        try:
-            user = User.query.filter_by(id=session['user_id']).first()
-            response = make_response(
-                user.to_dict(),
-                200
-            )
-            return response
-        except:
-            abort(401, "Unauthorized")
-#logout route
-class Logout(Resource):
-    def delete(self):
+    
+    username = request.get_json().get('username')
+    password = request.get_json().get('password')
+    confirm_password = request.get_json().get('confirmPassword')
+
+    if username and password and confirm_password:
+        if password == confirm_password:
+            # Create a new User instance with the retrieved values
+            new_user = User(username=username)
+            new_user.password_hash = password
+
+            db.session.add(new_user)
+            db.session.commit()
+
+            session['user_id'] = new_user.id
+            return new_user.to_dict(), 201
+        return {'message': 'Passwords do not match'}, 422
+    return {'message': 'Username, password, and confirm password are required'}, 422
+
+# /login
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.get_json()['username']
+    password = request.get_json()['password']
+
+    user = User.query.filter_by(username=username).first()
+    if user:
+        if user.authenticate(password):
+            session['user_id'] = user.id
+            return user.to_dict(), 200
+    return {'message': '401: Unauthorized'}, 401
+    
+# /check_session
+@app.route('/check_session', methods=['GET'])
+def check_session():
+    if session.get('user_id'):
+    # if session['user_id']:
+        user = User.query.filter_by(id=session['user_id']).first()
+        if user:
+            return user.to_dict(), 200
+    return {'message': '401: Unauthorized'}, 401
+
+# /logout
+@app.route('/logout', methods=['DELETE'])
+def logout():
+    if session.get('user_id'):
+    # if session['user_id']:
         session['user_id'] = None
-        response = make_response('', 204)
-        return response
+        return {'message': '204: No Content'}, 204
+    return {'message': '401: Unauthorized'}, 401
+
 
 
     
   
 #Routes for Resources
-api.add_resource(AuthorizedSession, '/authorized', endpoint='authorized')
-api.add_resource(Logout, '/logout', endpoint='logout')
-api.add_resource(Login, '/login', endpoint='login')
-api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(AnimesByID, '/anime/<int:id>', endpoint='animeID')
 api.add_resource(Animes, '/anime', endpoint='anime')
 api.add_resource(LikesByID, '/likes/<int:id>')

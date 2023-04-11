@@ -5,10 +5,13 @@ import Blog from "./Routes/Blog";
 import Anime from "./Routes/Anime";
 import NavBar from "./Components/NavBar";
 import Profile from "./Routes/Profile";
+import AddPost from "./Components/AddPost";
+import AddAnime from "./Components/AddAnime";
+
 function App() {
   // Code goes here!
   const [user, setUser] = useState(null);
-  const [anime, setAnime] = useState([]);
+  const [animes, setAnimes] = useState([]);
   const [posts, setPosts] = useState([]);
 
   
@@ -52,7 +55,7 @@ useEffect(() => {
     },
   })
     .then(res => res.json())
-    .then(anime => setAnime(anime))
+    .then(animes => setAnimes(animes))
     .catch(err => console.error(err));
 
 }, [] );
@@ -64,8 +67,10 @@ useEffect(() => {
         <Routes>
           <Route path="/" element={<WelcomePage />} />
           <Route path="/blog" element={<Blog users= {user} posts = {posts} />} />
-          <Route path="/anime" element={<Anime anime={anime} />} />
+          <Route path="/anime" element={<Anime animes={animes} />} />
           <Route path= "/profile" element={<Profile user={user} setUser={setUser} />} />
+          <Route path= "/addpost" element={<AddPost user={user} setUser={setUser} setPosts={setPosts} />} />
+          <Route path= "/addanime" element={<AddAnime user={user} setUser={setUser}  setAnimes={setAnimes} />} />
         </Routes>
 
     </>

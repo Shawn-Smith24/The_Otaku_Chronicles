@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AnimeList from "../Components/AnimeList";
 
-function Anime({anime}){
+function Anime({animes}){
     
     return(
         <div>
-            <ul className="Anime">{anime.map(anime => 
+            <ul className="Anime">{animes.map(anime => 
             <AnimeList 
             anime = {anime}
             />)} 

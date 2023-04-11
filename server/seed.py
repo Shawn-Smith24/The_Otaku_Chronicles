@@ -24,12 +24,8 @@ if __name__ == '__main__':
         print("Seeding users...")    
         users = [
             User(
-                name = 'Shinra Kusakabe',
-                user_name = 'devilsfootprints',
-                email = 'shinnygod@gmail.com',
-                password_hash = 'password1'
-        
-            )
+                username = 'shawnsmith',
+                _password_hash = 'password',)
         ]
         db.session.add_all(users)
 
@@ -37,9 +33,9 @@ if __name__ == '__main__':
         print("Seeding posts...")
         posts = [
             Post(
-                subject = 'My first post',
-                text = 'I am the best',
-                username = 'devilsfootprints'
+                subject = 'Testing Posts',
+                text = 'This is a test post',
+                username = 'shawnsmith'
             ), 
         ]
         db.session.add_all(posts)

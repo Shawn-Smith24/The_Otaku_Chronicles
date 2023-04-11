@@ -1,4 +1,4 @@
-
+from sqlalchemy.ext.hybrid import hybrid_property
 from config import db
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
@@ -20,15 +20,13 @@ db = SQLAlchemy(metadata=metadata)
 # Models go here!
 
 class User(db.Model, SerializerMixin):
-    serialize_only = ( 'name', 'user_name', 'email', 'posts')
+    serialize_only = ( 'username', 'posts')
     
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable= False)
-    user_name = db.Column(db.String(50), nullable= False, unique=True)
-    password_hash = db.Column(db.String(50), unique=True)
-    email = db.Column(db.String(50), unique=True)
+    username = db.Column(db.String(50), nullable= False, unique=True)
+    _password_hash = db.Column(db.String(50), nullable=False)
     
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -37,53 +35,37 @@ class User(db.Model, SerializerMixin):
     comments = db.relationship('Comment', backref='users')
     likes = db.relationship('Like', backref='users')
     anime = db.relationship('Anime', backref='users')
-    
-    
-    def __init__(self, name, user_name, email, password_hash):
-        self.name = name
-        self.user_name = user_name
-        self.email = email
-        self.password_hash = password_hash
-        
-        
-    def __repr__(self):
-        return f'User : {self.user_name}, {self.email}'
 
-        
+    @hybrid_property
+    def password_hash(self):
+        raise AttributeError('Password hashes may not be accessed')
+    
+    @password_hash.setter
+    def password_hash(self, password):
+        password_hash = bcrypt.generate_password_hash(
+            password.encode('utf_8'))
+        self._password_hash = password_hash.decode('utf-8')
+
+    # authentication method using user and password
     def authenticate(self, password):
-        return bcrypt.check_password_hash(self.password, password)
-    
-    @property
-    def password(self):
-        raise AttributeError('Password is not a readable attribute')
-    
-    @password.setter
-    def password(self, password):
-        self.set_password(password)
+        return bcrypt.check_password_hash(
+            self._password_hash, password.encode('utf-8'))    
         
+    def __repr__ (self):
+        return f'User: {self.username}'    
+    
     
     @validates('user_name')
     def validate_user_name(self, key, user_name):
         if not user_name:
-         raise AssertionError('No user_name provided')
+            raise AssertionError('No user_name provided')
      
         if not re.match("[a-zA-Z0-9]+", user_name):
             
-          raise AssertionError('Provided user_name is not an user_name') 
+            raise AssertionError('Provided user_name is not an user_name') 
       
         return user_name
     
-    
-    @validates('email')
-    def validate_email(self, key, email):
-        if not email:
-         raise AssertionError('No email provided')
-     
-        if not re.match("[^@]+@[^@]+\.[^@]+", email):
-            
-          raise AssertionError('Provided email is not an email address') 
-      
-        return email
     
 class Post(db.Model, SerializerMixin):
     serialize_only = ('id', 'text', 'subject', 'username', 'comments', 'likes')
@@ -93,7 +75,7 @@ class Post(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     subject = db.Column(db.String, default='Enter a description for your post')
     text = db.Column(db.String(500), nullable=False)
-    username = db.Column(db.String(50) , db.ForeignKey('users.user_name'))
+    username = db.Column(db.String(50) , db.ForeignKey('users.username'))
     
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -129,7 +111,7 @@ class Like(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
-    username = db.Column(db.String(50) , db.ForeignKey('users.user_name'))
+    username = db.Column(db.String(50) , db.ForeignKey('users.username'))
     likes = db.Column(db.Integer, default=0)
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
@@ -150,7 +132,7 @@ class Comment(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(500), nullable=False)
-    username = db.Column(db.String(50) , db.ForeignKey('users.user_name'))
+    username = db.Column(db.String(50) , db.ForeignKey('users.username'))
 
     
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))

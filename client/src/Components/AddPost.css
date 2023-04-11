@@ -1,0 +1,45 @@
+.post-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 500px;
+    height: 600px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+}
+
+.subject{
+    width: 300px;
+    height: 50px;
+    border-radius: 10px;
+    border: .7px solid #ccc;
+    padding: 5px;
+    font-size: 14px;
+
+    margin-bottom: 20px;
+}
+
+.text{
+    width: 300px;
+    height: 200px;
+    border-radius: 10px;
+    border: .7px solid #ccc;
+    padding: 5px;
+    font-size: 14px;
+
+    margin-bottom: 20px;
+}
+
+.submit{
+    width: 100px;
+    height: 50px;
+    border-radius: 20px;
+    border: .7px solid #ccc;
+    padding: 5px;
+    font-size: 14px;
+
+    margin-bottom: 20px;
+}

@@ -8,7 +8,7 @@ function Navbar ({user, onLogout}) {
     let navigate = useNavigate()
   
     function redirectHome() {
-        navigate('/')
+        navigate('/anime')
     }
   
     function handleLogout() {
@@ -24,19 +24,18 @@ function Navbar ({user, onLogout}) {
       <nav className="navbar">
           <div className='links'>
               <Link to='/'>The Otaku Chronicles</Link>
-              <Link to='/blog' 
-              >Blog</Link>
+              <Link to='/addanime'>New Anime</Link>
               <Link to='/anime' 
               >Anime</Link>
+              <Link to='/blog' 
+              >Blog</Link>
+              <Link to='/addpost'>New Post</Link>
               <Link to='/profile' 
               >Profile</Link>
               {user ?
-              <>
                   <Link to="/logout">
                       <button className="NavBarButton" onClick={handleLogout}>Logout</button>
                   </Link>
-                  
-              </>
                   : ''
               }
           </div>
