@@ -1,111 +1,112 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 import './SignUp.css';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 
+function SignUp({ setUser, user }) {
+  const formSchema = yup.object().shape({
+    username: yup.string().required("Must enter username"),
+    password: yup.string()
+      .required("Must enter a password")
+      .min(6, 'Password is too short - should be 6 chars minimum.')
+      .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+    // ADDED ABOVE 2 LINES TO PASSWORD VALIDATION
 
-function SignUp({ setUser, users}) {
-  const [formData, setFormData] = useState({
-    name: '',
-    user_name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    confirmPassword: yup.string().when("password", {
+      is: val => (val && val.length > 0 ? true : false),
+      then: yup.string().oneOf(
+        [yup.ref("password")],
+        "Must enter the same password"
+      )
+    })
   });
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+      confirmPassword: "",
+      // ADDED ABOVE 1 LINE TO CONFIRM PASSWORD
+    },
 
-  const handleSignUp = async () => {
-    try {
-      const response = await fetch('/signup', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to sign up');
-      }
-  
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  
+    validationSchema: formSchema,
+    onSubmit: (values, { resetForm }) => {
+      // successfully posted a new account to below
+      // fetch("http://localhost:8000/users", {
+      // shows on db and above url
+      // {
+      //     "name": "test123456",
+      //     "password": "test123456",
+      //     "confirmPassword": "test123456",
+      //     "id": 1
+      // }
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    handleSignUp();
-  };
+      fetch("/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values, null, 2),
+      })
+        .then((res) => {
+          if (res.status === 201) {
+            res.json()
+              .then((user) => {
+                setUser(user)
+                window.alert(`Welcome ${user.username}!`)
+              })
+              .then(() => {
+                resetForm()
+                // redirectAccount()
+              })
+          } else if (res.status === 500) {
+            window.alert("Username in use!")
+            resetForm()
+          }
+        });
+    },
+  });
+
 
   return (
-    <form onSubmit={handleSubmit} className='signup-card'>
-      <div>
-        <label htmlFor="name">Name:</label>
-        <input
-            className='name'
-          type="text"
-          id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
+    <div>
+      <form className="form" onSubmit={formik.handleSubmit}>
+
         <label htmlFor="username">Username:</label>
+        <br />
         <input
-        className='username'
-          type="text"
           id="username"
+          className='username'
           name="username"
-          value={formData.username}
-          onChange={handleInputChange}
+          onChange={formik.handleChange}
+          value={formik.values.username}
         />
-      </div>
-      <div>
-        <label htmlFor="email">Email:</label>
-        <input
-        className='email'
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
+        <p > {formik.errors.name}</p>
+
         <label htmlFor="password">Password:</label>
+        <br />
         <input
-        className='password'
-          type="password"
           id="password"
           name="password"
-          value={formData.password}
-          onChange={handleInputChange}
+          className='password'
+          onChange={formik.handleChange}
+          value={formik.values.password}
         />
-      </div>
-      <div>
-        <label htmlFor="confirmPassword">Confirm Password:</label>
+        <p> {formik.errors.password}</p>
+
+        <label htmlFor="confirm-password">Confirm Password:</label>
+        <br />
         <input
-        className='password'
-          type="password"
-          id="confirmPassword"
+          id="confirm-password"
           name="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleInputChange}
+          className='password'
+          onChange={formik.handleChange}
+          value={formik.values.confirmPassword}
         />
-      </div>
-      <button className="signup-btn" type="submit">SignUp</button>
-    </form>
-  );
+        <p> {formik.errors.confirmPassword}</p>
+
+        <button type="submit" className='signup-btn'>Submit</button>
+      </form>
+    </div>
+  )
 }
 
 export default SignUp;

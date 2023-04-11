@@ -1,33 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
 import WelcomePage from "./Routes/WelcomePage";
 import Blog from "./Routes/Blog";
-import Login from "./Routes/Login";
-import Signup from "./Routes/SignUp";
 import Anime from "./Routes/Anime";
 import NavBar from "./Components/NavBar";
-
+import Profile from "./Routes/Profile";
 function App() {
   // Code goes here!
-  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState(null);
   const [anime, setAnime] = useState([]);
   const [posts, setPosts] = useState([]);
 
-
-  //Fetch User Functionality
+  
+  
   useEffect(() => {
-    fetch (`/users`, 
-      {method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-    },)
-      .then(res => res.json())
-      .then(users => setUsers(users))
-      .catch(err => console.error(err));
+    fetch("/check_session")
+    .then((r) => {
+      // console.log(r)
+      if (r.ok) {
+        r.json()
+        .then((user) => {setUser(user)});
+      }
+    });
   }, []);
   
-// Posts Functionality
+  function onLogout() {
+    setUser(null);
+  }
+  
+  // Posts Functionality
   useEffect(() => {
     fetch (`/posts`, 
       {method: 'GET',
@@ -39,6 +40,8 @@ function App() {
       .then(posts => setPosts(posts))
       .catch(err => console.error(err));
   }, []);
+
+
 
 // Anime Functionality
 useEffect(() => {
@@ -57,13 +60,12 @@ useEffect(() => {
   
   return(
     <>
-        <NavBar />
+        <NavBar user={user} onLogout={onLogout}/>
         <Routes>
           <Route path="/" element={<WelcomePage />} />
-          <Route path="/blog" element={<Blog users= {users} posts = {posts} />} />
-          <Route path="/login" element={<Login setUser = {setUsers} />} />
-          <Route path="/signup" element={<Signup users={users} setUser = {setUsers} />} />
+          <Route path="/blog" element={<Blog users= {user} posts = {posts} />} />
           <Route path="/anime" element={<Anime anime={anime} />} />
+          <Route path= "/profile" element={<Profile user={user} setUser={setUser} />} />
         </Routes>
 
     </>

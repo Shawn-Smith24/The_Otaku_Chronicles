@@ -1,31 +1,19 @@
-.signup-card{
-    width: flex;
-    position: absolute;
-    top: 10%;
-}
-
-.name{
-    width: 100%;
-    height: 40px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
-    padding: 7px;
-    font-size: 14px;
-    margin-bottom: 20px;
+.form{
+    width: 500px;
+    height: 350px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+    padding: 20px;
+    margin: 0 auto;
+    margin-top: 100px;
+    text-align: center;
 }
 
 
-.email{
-    width: 100%;
-    height: 40px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
-    padding: 7px;
-    font-size: 14px;
-    margin-bottom: 20px;
-}
+
 .username{
-    width: 100%;
+    width: 350px;
     height: 40px;
     border-radius: 20px;
     border: 1px solid #ccc;
@@ -35,7 +23,7 @@
 }
 
 .password{
-    width: 100%;
+    width: 350px;
     height: 40px;
     border-radius: 20px;
     border: 1px solid #ccc;
@@ -45,11 +33,11 @@
 }
 
 .signup-btn{
-    width: 60px;
+    width: 70px;
     height: 40px;
     border-radius: 20px;
     border: 1px solid #ccc;
     padding: 7px;
-    font-size: 14px;
+    font-size: 13px;
     margin-bottom: 20px;
 }

@@ -13,3 +13,18 @@
     width: 100%;
     z-index: 100;
 }
+
+.links{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 60%;
+}
+.NavBarButton{
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}

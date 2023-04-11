@@ -1,16 +1,46 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './NavBar.css'
-const NavBar = () => {
-    return (
-        <nav className='navbar'>
-            <Link to='/'>Otaku Chronicles</Link>
-            <Link to='/blog'>Blog</Link>
-            <Link to='/login'>Login</Link>
-            <Link to='/signup'>Signup</Link>
-            <Link to='/anime'>Anime</Link>
-        </nav>
-    )
-}
 
-export default NavBar
+
+function Navbar ({user, onLogout}) {
+    
+    let navigate = useNavigate()
+  
+    function redirectHome() {
+        navigate('/')
+    }
+  
+    function handleLogout() {
+      fetch("/logout", {
+        method: "DELETE",
+      }).then(() => {
+        onLogout()
+        redirectHome()
+      });
+    }
+
+  return (
+      <nav className="navbar">
+          <div className='links'>
+              <Link to='/'>The Otaku Chronicles</Link>
+              <Link to='/blog' 
+              >Blog</Link>
+              <Link to='/anime' 
+              >Anime</Link>
+              <Link to='/profile' 
+              >Profile</Link>
+              {user ?
+              <>
+                  <Link to="/logout">
+                      <button className="NavBarButton" onClick={handleLogout}>Logout</button>
+                  </Link>
+                  
+              </>
+                  : ''
+              }
+          </div>
+      </nav>
+  )
+}
+export default Navbar

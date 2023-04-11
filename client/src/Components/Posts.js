@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import "./Posts.css";
 
-function Posts({post}){
+function Posts({post, handleDelete}){
     const {username, subject, text, comments, created_at} = post
     
     
@@ -27,11 +27,11 @@ function Posts({post}){
           .catch(err => console.error(err));
   });
 
+
     return (
         
-
-        <div className="posts">
-            <p>
+            <article className="posts">
+                
                 <h2 className="subject">{subject}</h2>
                 <h3 className="post-username"> {username}</h3>
                 <p className="text"> {text}</p>
@@ -39,10 +39,10 @@ function Posts({post}){
                 <h3 className="created_at">{created_at}</h3>
                 <div className="like-delete">
                     <button className="like" onClick={handleLike} likes={likes}>Like</button>
-                    <button className="delete">Delete</button>
+                    <button className="delete" onClick={handleDelete}>Delete</button>
                 </div>
-            </p>
-        </div>
+            </article>
+        
     )
 }
 

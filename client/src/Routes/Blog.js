@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Posts from "../Components/Posts";
 
-function Blog({ users, posts }) {
+function Blog({ users, posts, handleDelete }) {
 
     return (
         <div>
@@ -9,6 +9,7 @@ function Blog({ users, posts }) {
                 <Posts
                     users={users}
                     post={post}
+                    handleDelete={handleDelete}
                 />)}
             </ul>
         </div>
