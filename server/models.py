@@ -28,7 +28,7 @@ class User(db.Model, SerializerMixin):
     name = db.Column(db.String(50), nullable= False)
     user_name = db.Column(db.String(50), nullable= False, unique=True)
     password_hash = db.Column(db.String(50), unique=True)
-    email = db.Column(db.String(50), nullable= False, unique=True)
+    email = db.Column(db.String(50), unique=True)
     
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -48,9 +48,7 @@ class User(db.Model, SerializerMixin):
         
     def __repr__(self):
         return f'User : {self.user_name}, {self.email}'
-    
-    def set_password(self, password):
-        self.password = bcrypt.generate_password_hash(password).decode('UTF-8')
+
         
     def authenticate(self, password):
         return bcrypt.check_password_hash(self.password, password)
@@ -125,13 +123,14 @@ class Post(db.Model, SerializerMixin):
     
     
 class Like(db.Model, SerializerMixin):
-    serialize_only = ('id', 'post_id', 'username')
+    serialize_only = ('id', 'post_id', 'username', 'likes')
     
     __tablename__ = 'likes'
     
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
     username = db.Column(db.String(50) , db.ForeignKey('users.user_name'))
+    likes = db.Column(db.Integer, default=0)
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())

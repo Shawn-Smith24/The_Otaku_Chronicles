@@ -18,6 +18,7 @@ if __name__ == '__main__':
         Post.query.delete()
         Comment.query.delete()
         Like.query.delete()
+        Anime.query.delete()
 
 
         print("Seeding users...")    

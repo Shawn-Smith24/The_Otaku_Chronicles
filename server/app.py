@@ -269,14 +269,16 @@ class Likes(Resource):
         return response
     
     def post(self):
-        data = request.get_json()
-        new_like = Like(
-            username=data['username'],
-            post_id=data['post_id'],
-        )
-        db.session.add(new_like)
+        
+        likes = request.json['likes']
+        
+        
+        like = Like(likes=likes)
+        db.session.add(like)
         db.session.commit()
-        return new_like.to_dict()
+        
+        total_likes = Like.query.filter_by().count()
+        return jsonify({ 'likes': total_likes})
 
 class LikesByID(Resource):
     def get(self,id):
@@ -388,39 +390,32 @@ class AnimesByID(Resource):
 #signup route
 class Signup(Resource):
     def post(self):
-        request_json = request.json()
-        if request.method == 'POST':
-            name = request.form.get("name")
-            email = request.form.get("email")
-            user_name = request.form.get("user_name")
-            password_hash = request.form.get("password_hash")
-            password_hash2 = request.form.get("password_hash2")
-
-            email_exists = User.query.filter_by(email=email).first()
-            user_name_exists = User.query.filter_by(user_name=user_name).first()
-            
-            if email_exists:
-                flash("Email already exists", category="error")
-            elif user_name_exists:
-                flash("Username already exists", category="error")
-            elif len(email) < 4:
-                flash ("Email must be greater than 4 characters", category="error")
-            
-            else:
-                new_user = User(
-                    name=name,
-                    user_name= user_name,
-                    email=email,
-                    password_hash1= generate_password_hash(password_hash, method='sha256'),
-                    password_hash2 = generate_password_hash(password_hash2, method='sha256')
-                )
-                db.session.add(new_user)
-                db.session.commit()
-                
-                login_user(new_user, remember=True)
-                flash("Account created!", category="success")
-                return redirect(url_for('anime'))
-            return render_template('SignUp.js', user=current_user)
+        name = request.get_json().get('name')
+        user_name = request.get_json().get('user_name')
+        email = request.get_json().get('email')
+        password_hash = request.get_json().get('password_hash')
+        
+        #check if user already exists in the db for flask
+        user = User.query.filter_by(email=email).first()
+        
+        if user:
+            flash("User already exists", category="error")
+           
+        
+        new_user = User(
+            name=name, 
+            user_name=user_name, 
+            email=email, 
+            password_hash=generate_password_hash(password_hash, method='sha256'))
+        db.session.add(new_user)
+        db.session.commit()
+        
+        flash("Account created", category="success")
+        
+        return {"message": "Account created"}
+    
+        
+        
 
 #login route
 class Login(Resource):
@@ -432,14 +427,15 @@ class Login(Resource):
         if user:
             if check_password_hash(user.password_hash, password_hash):
                 flash("Logged in successfully", category="success")
-                login_user(user, remember=True)
-                return redirect(url_for('anime'))
+                
+                return {"message": "Logged in successfully"}
             else:
                 flash("Incorrect password", category="error")
         else:
             flash("User not found", category="error")
         
-        return redirect(url_for('anime'))
+        return {"message": "Invalid credentials"}
+    
 class AuthorizedSession(Resource):
     def post(self):
         try:
