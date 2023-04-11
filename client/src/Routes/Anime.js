@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import AnimeList from "../Components/AnimeList";
 
-
-function Anime(){
+function Anime({anime}){
     
     return(
-        <div></div>
+        <div>
+            <ul className="Anime">{anime.map(anime => 
+            <AnimeList 
+            anime = {anime}
+            />)} 
+            </ul>
+        </div>
     )
 }
 

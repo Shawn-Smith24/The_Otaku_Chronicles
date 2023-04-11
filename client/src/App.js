@@ -12,7 +12,7 @@ function App() {
   const [users, setUsers] = useState([]);
   const [anime, setAnime] = useState([]);
   const [posts, setPosts] = useState([]);
-  const [likes, setLikes] = useState(0);
+
 
   //Fetch User Functionality
   useEffect(() => {
@@ -40,7 +40,20 @@ function App() {
       .catch(err => console.error(err));
   }, []);
 
+// Anime Functionality
+useEffect(() => {
+  fetch('/anime', {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+    },
+  })
+    .then(res => res.json())
+    .then(anime => setAnime(anime))
+    .catch(err => console.error(err));
 
+}, [] );
+  
   
   return(
     <>
@@ -50,7 +63,7 @@ function App() {
           <Route path="/blog" element={<Blog users= {users} posts = {posts} />} />
           <Route path="/login" element={<Login setUser = {setUsers} />} />
           <Route path="/signup" element={<Signup users={users} setUser = {setUsers} />} />
-          <Route path="/anime" element={<Anime users= {users} />} />
+          <Route path="/anime" element={<Anime anime={anime} />} />
         </Routes>
 
     </>

@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import './SignUp.css';
 
 
-function SignUp() {
+function SignUp({ setUser, users}) {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    username: '',
+    name: '',
+    user_name: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -25,7 +24,7 @@ function SignUp() {
       const response = await fetch('/signup', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify(formData),
       });
@@ -50,24 +49,13 @@ function SignUp() {
   return (
     <form onSubmit={handleSubmit} className='signup-card'>
       <div>
-        <label htmlFor="firstName">First Name:</label>
+        <label htmlFor="name">Name:</label>
         <input
-            className='first-name'
+            className='name'
           type="text"
-          id="firstName"
-          name="firstName"
-          value={formData.firstName}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="lastName">Last Name:</label>
-        <input
-        className='last-name'
-          type="text"
-          id="lastName"
-          name="lastName"
-          value={formData.lastName}
+          id="name"
+          name="name"
+          value={formData.name}
           onChange={handleInputChange}
         />
       </div>
