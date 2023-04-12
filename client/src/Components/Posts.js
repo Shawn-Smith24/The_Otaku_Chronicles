@@ -19,9 +19,8 @@ function Posts({post, setPosts, handleDelete}){
                 <p className="text"> {text}</p>
                 <h3 className="comments"> {comments}</h3>
                 <h3 className="created_at">{created_at}</h3>
-                <div className="like-delete">
-                    <button className="delete" onClick={handleDelete}>Delete</button>
-                </div>
+                <button className="delete" onClick={handleDelete}>Delete</button>
+               
             </article>
         
     )
