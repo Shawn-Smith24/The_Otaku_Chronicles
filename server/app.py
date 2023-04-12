@@ -1,14 +1,10 @@
-from flask import Flask, make_response, request, abort, jsonify, session, url_for, redirect, flash, render_template
+from flask import Flask, make_response, request, abort, jsonify, session
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from models import db, User, Post, Anime, Manga, Character
 from werkzeug.exceptions import NotFound, Unauthorized
 import requests
-
-
-
-
 
 
 app = Flask(__name__)
@@ -361,7 +357,7 @@ api.add_resource(Characters, '/characters', endpoint='character')
 api.add_resource(Mangas, '/manga', endpoint='manga')
 api.add_resource(AnimesByID, '/anime/<int:id>', endpoint='animeID')
 api.add_resource(Animes, '/anime', endpoint='anime')
-api.add_resource(PostsByID, '/posts/<int:id>')
+api.add_resource(PostsByID, '/api/posts/<int:id>')
 api.add_resource(Posts, '/posts', endpoint='posts')
 api.add_resource(UsersByID, '/users/<int:id>', endpoint='usersId')   
 api.add_resource(Users, '/users/', endpoint='users')  
