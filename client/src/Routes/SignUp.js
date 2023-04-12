@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 import * as yup from 'yup';
 import './SignUp.css';
 
@@ -9,17 +10,18 @@ function SignUp({ setUser, user }) {
     username: yup.string().required("Must enter username"),
     password: yup.string()
       .required("Must enter a password")
-      .min(8, 'Password is too short - should be 8 chars minimum.')
-      .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+      .min(8, 'Password is too short - should be 8 chars minimum.'),
+    confirmPassword: yup.string()
+      .required("Must confirm password")
 
-
-    confirmPassword: yup.string().when("password", {
-      is: val => (val && val.length > 0 ? true : false),
-      then: yup.string().oneOf(
-        [yup.ref("password")],
-      )
-    })
   });
+
+  const navigate = useNavigate();
+      
+  const redirectAccount = () => {
+    navigate("/anime")
+  }
+
 
 const formik = useFormik({
         initialValues: {
@@ -34,7 +36,7 @@ const formik = useFormik({
           fetch("/signup", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(values, null, 2),
+            body: JSON.stringify(values, null, 3),
         })
         .then((res) => {
             if (res.status === 201) {
@@ -45,7 +47,7 @@ const formik = useFormik({
                 })
                 .then(() => {
                     resetForm()
-                    // redirectAccount()
+                    redirectAccount()
                 })
             } else if (res.status === 500) {
                 window.alert("Username in use!")
@@ -67,7 +69,7 @@ const formik = useFormik({
           onChange={formik.handleChange}
           value={formik.values.username}
         />
-        <p > {formik.errors.name}</p>
+        <p > {formik.errors.username}</p>
 
         <label htmlFor="password">Password:</label>
         <br />

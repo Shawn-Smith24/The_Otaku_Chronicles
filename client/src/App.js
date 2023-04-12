@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route} from "react-router-dom";
+import { Routes, Route, useNavigate} from "react-router-dom";
 import WelcomePage from "./Routes/WelcomePage";
 import Blog from "./Routes/Blog";
 import Anime from "./Routes/Anime";
@@ -18,10 +18,11 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [characters, setCharacters] = useState([]);
   const [mangas, setMangas] = useState([]);
-
+  
+  
 
   function handleDelete(id) {
-    fetch(`/posts/${id}`, {
+    fetch(`/api/posts/${id}`, {
       method: "DELETE",
     })
       .then((r) => r.json())

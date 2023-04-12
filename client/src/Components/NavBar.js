@@ -8,7 +8,7 @@ function Navbar ({user, onLogout}) {
     let navigate = useNavigate()
   
     function redirectHome() {
-        navigate('/anime')
+        navigate('/characters')
     }
   
     function handleLogout() {

@@ -1,8 +1,15 @@
 import {useFormik} from "formik";
+import { redirect, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import './Login.css'
 
 function Login({user, setUser}) {
+
+    const navigate = useNavigate();
+
+    const redirectUser = () => {
+        navigate("/mangas")
+    }
 
     const formSchema = yup.object().shape({
         username: yup.string().required("Must enter username"),
@@ -35,7 +42,7 @@ function Login({user, setUser}) {
                     })
                     .then(() => {
                         resetForm()
-                        
+                        redirectUser()
                     }) 
                 }
             });
