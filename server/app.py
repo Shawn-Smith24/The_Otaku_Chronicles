@@ -2,7 +2,7 @@ from flask import Flask, make_response, request, abort, jsonify, session, url_fo
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_restful import Api, Resource
-from models import db, User, Post, Comment, Like, Anime
+from models import db, User, Post, Anime, Manga, Character
 from werkzeug.exceptions import NotFound, Unauthorized
 import requests
 
@@ -182,134 +182,6 @@ class PostsByID(Resource):
         
         return response
 
-class Comments(Resource):
-    def get(self):
-        comments = Comment.query.all()
-        comments_dict = [comment.to_dict() for comment in comments]
-
-        response = make_response(
-            jsonify(comments_dict),
-            200,
-        )
-
-        return response
-    
-    def post(self):
-        data = request.get_json()
-        new_comment = Comment(
-            text=data['text'],
-            username=data['username'],
-            post_id=data['post_id'],
-        )
-        db.session.add(new_comment)
-        db.session.commit()
-        return new_comment.to_dict()
-
-class CommentsByID(Resource):
-    def get(self,id):
-        comment = Comment.query.filter_by(id=id).first()
-        
-        if not comment:
-            abort(404, 'Comment not found')
-            
-        comment_dict = comment.to_dict()
-        
-        response = make_response(
-            jsonify(comment_dict),
-            200
-        )
-        return response
-
-    def patch(self, id):
-        comment = Comment.query.filter_by(id=id).first()
-        
-        if not comment:
-            abort(404, 'Comment not found')
-            
-        data = request.get_json()
-        for key in data:
-            setattr(comment, key, data[key])
-            
-        db.session.add(comment)
-        db.session.commit()
-        
-        response = make_response(
-            comment.to_dict(),
-            200,
-        )
-        
-        return response
-    
-    def delete(self, id):
-        comment = Comment.query.filter_by(id=id).first()
-        
-        if not comment:
-            abort(404, 'Comment not found')
-            
-        db.session.delete(comment)
-        db.session.commit()
-        
-        response = make_response(
-            '',
-            204,
-        )
-        
-        return response
-class Likes(Resource):
-    def get(self):
-        likes = Like.query.all()
-        likes_dict = [like.to_dict() for like in likes]
-
-        response = make_response(
-            jsonify(likes_dict),
-            200,
-        )
-
-        return response
-    
-    def post(self):
-        
-        likes = request.json['likes']
-        
-        
-        like = Like(likes=likes)
-        db.session.add(like)
-        db.session.commit()
-        
-        total_likes = Like.query.filter_by().count()
-        return jsonify({ 'likes': total_likes})
-
-class LikesByID(Resource):
-    def get(self,id):
-        like = Like.query.filter_by(id=id).first()
-        
-        if not like:
-            abort(404, 'Like not found')
-            
-        like_dict = like.to_dict()
-        
-        response = make_response(
-            jsonify(like_dict),
-            200
-        )
-        return response
-    
-    
-    def delete(self, id):
-        like = Like.query.filter_by(id=id).first()
-        
-        if not like:
-            abort(404, 'Like not found')
-            
-        db.session.delete(like)
-        db.session.commit()
-        
-        response = make_response(
-            '',
-            204,
-        )
-        
-        return response
 
 class Animes(Resource):
     def get(self):
@@ -390,8 +262,54 @@ class AnimesByID(Resource):
         return response
 #signup route
 
+class Mangas(Resource):
+    def get(self):
+        mangas = Manga.query.all()
+        manga_dict = [manga.to_dict() for manga in mangas]
 
+        response = make_response(
+            jsonify(manga_dict),
+            200,
+        )
 
+        return response
+    
+    def post(self):
+        data = request.get_json()
+        new_manga = Manga(
+            title=data['title'],
+            description=data['description'],
+            image_url=data['image_url'],
+            genre=data['genre']
+        )
+        db.session.add(new_manga)
+        db.session.commit()
+        return new_manga.to_dict()
+
+class Characters(Resource):
+    def get(self):
+        characters = Character.query.all()
+        character_dict = [character.to_dict() for character in characters]
+
+        response = make_response(
+            jsonify(character_dict),
+            200,
+        )
+
+        return response
+    
+    def post(self):
+        data = request.get_json()
+        new_character = Character(
+            name=data['name'],
+            image_url=data['image_url'],
+            bio = data['bio'],
+            tier=data['tier'],
+            power=data['power'],
+        )
+        db.session.add(new_character)
+        db.session.commit()
+        return new_character.to_dict()
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -452,13 +370,11 @@ def logout():
     
   
 #Routes for Resources
+api.add_resource(Characters, '/characters', endpoint='character')
+api.add_resource(Mangas, '/manga', endpoint='manga')
 api.add_resource(AnimesByID, '/anime/<int:id>', endpoint='animeID')
 api.add_resource(Animes, '/anime', endpoint='anime')
-api.add_resource(LikesByID, '/likes/<int:id>')
-api.add_resource(Likes, '/likes', endpoint='likes')
-api.add_resource(CommentsByID, '/comments/<int:id>', endpoint='comment')
-api.add_resource(Comments, '/comments', endpoint='comments')
-api.add_resource(PostsByID, '/posts/<int:id>', endpoint='post')
+api.add_resource(PostsByID, '/posts/<int:id>')
 api.add_resource(Posts, '/posts', endpoint='posts')
 api.add_resource(UsersByID, '/users/<int:id>', endpoint='usersId')   
 api.add_resource(Users, '/users/', endpoint='users')  

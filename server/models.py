@@ -32,9 +32,9 @@ class User(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     
     posts = db.relationship('Post', backref='users')
-    comments = db.relationship('Comment', backref='users')
-    likes = db.relationship('Like', backref='users')
     anime = db.relationship('Anime', backref='users')
+    manga = db.relationship('Manga', backref='users')
+    characters = db.relationship('Character', backref='users')
 
     @hybrid_property
     def password_hash(self):
@@ -68,7 +68,7 @@ class User(db.Model, SerializerMixin):
     
     
 class Post(db.Model, SerializerMixin):
-    serialize_only = ('id', 'text', 'subject', 'username', 'comments', 'likes')
+    serialize_only = ('id', 'text', 'subject', 'username')
     
     __tablename__ = 'posts'
     
@@ -81,9 +81,7 @@ class Post(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     
    
-    comments = db.relationship('Comment', backref='posts')
-    likes = db.relationship('Like', backref='posts')
-    
+
     def __init__(self, subject, username, text):
         self.subject = subject
         self.username = username
@@ -104,62 +102,6 @@ class Post(db.Model, SerializerMixin):
         return text
     
     
-class Like(db.Model, SerializerMixin):
-    serialize_only = ('id', 'post_id', 'username', 'likes')
-    
-    __tablename__ = 'likes'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
-    username = db.Column(db.String(50) , db.ForeignKey('users.username'))
-    likes = db.Column(db.Integer, default=0)
-
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
-    
-   
-    
-    def __repr__(self):
-        return f'Like : {self.id}'
-
-
-class Comment(db.Model, SerializerMixin):
-    serialize_only = ('id', 'text', 'username', 'post_id')
-    
-    
-    __tablename__ = 'comments'
-    
-    
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(500), nullable=False)
-    username = db.Column(db.String(50) , db.ForeignKey('users.username'))
-
-    
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
-    
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
-
-    def __init__(self, text, username):
-        self.username = username
-        self.text = text
-
-    @validates('text')
-    def validate_text(self, key, text):
-        if not text:
-         raise AssertionError('No text provided')
-     
-        if not re.match("[a-zA-Z0-9]+", text):
-            
-          raise AssertionError('Provided text is not an text') 
-      
-        return text
-    
-
-    def __repr__(self):
-        return f'Comment : {self.text}'
-    
-    
 class Anime(db.Model, SerializerMixin):
     serialize_only = ('id', 'title', 'description', 'image_url', 'genre')
     
@@ -175,4 +117,158 @@ class Anime(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     
+    @validates('title')
+    def validates_title (self, key, title):
+        if not title:
+            raise AssertionError('No title provided')
+     
+        if not re.match("[a-zA-Z0-9]+", title):
+            
+            raise AssertionError('Provided title is not an title') 
+      
+        return title
     
+    @validates('description')
+    def validates_description (self, key, description):
+        if not description:
+            raise AssertionError('No description provided')
+     
+        if not re.match("[a-zA-Z0-9]+", description):
+            
+            raise AssertionError('Provided description is not an description') 
+      
+        return description
+    
+    @validates('image_url')
+    def validates_image_url (self, key, image_url):
+        if not image_url:
+            raise AssertionError('No image_url provided')
+     
+        if not re.match("[a-zA-Z0-9]+", image_url):
+            
+            raise AssertionError('Provided image_url is not an image_url') 
+      
+        return image_url
+    
+    @validates('genre')
+    def validates_genre (self, key, genre):
+        if not genre:
+            raise AssertionError('No genre provided')
+     
+        if not re.match("[a-zA-Z0-9]+", genre):
+            
+            raise AssertionError('Provided genre is not an genre') 
+      
+        return genre
+    
+    
+class Manga(db.Model, SerializerMixin):
+    serialize_only = ('id', 'title', 'description', 'image_url', 'genre')
+    
+    __tablename__ = 'mangas'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(500), nullable=False)
+    genre = db.Column(db.String(50), nullable=False)
+    image_url = db.Column(db.String(500), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    
+    
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    
+    
+    @validates('title')
+    def validates_title (self, key, title):
+        if not title:
+            raise AssertionError('No title provided')
+     
+        if not re.match("[a-zA-Z0-9]+", title):
+            
+            raise AssertionError('Provided title is not an title') 
+      
+        return title
+    
+    @validates('description')
+    def validates_description (self, key, description):
+        if not description:
+            raise AssertionError('No description provided')
+     
+        if not re.match("[a-zA-Z0-9]+", description):
+            
+            raise AssertionError('Provided description is not an description') 
+      
+        return description
+    
+    @validates('image_url')
+    def validates_image_url (self, key, image_url):
+        if not image_url:
+            raise AssertionError('No image_url provided')
+     
+        if not re.match("[a-zA-Z0-9]+", image_url):
+            
+            raise AssertionError('Provided image_url is not an image_url') 
+      
+        return image_url
+    
+    @validates('genre')
+    def validates_genre (self, key, genre):
+        if not genre:
+            raise AssertionError('No genre provided')
+     
+        if not re.match("[a-zA-Z0-9]+", genre):
+            
+            raise AssertionError('Provided genre is not an genre') 
+      
+        return genre
+    
+class Character(db.Model, SerializerMixin):
+    serialize_only = ('id', 'name', 'power', 'tier', 'bio', 'image_url')
+    
+    __tablename__ = 'characters'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    image_url = db.Column(db.String(500))
+    name = db.Column(db.String(50), nullable=False)
+    power = db.Column(db.String(500), nullable=False)
+    tier = db.Column(db.String(50), nullable=False)
+    bio = db.Column(db.String(500), nullable=False)
+    
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    
+    @validates('name')
+    def validates_name (self, key, name):
+        if not name:
+            raise AssertionError('No name provided')
+     
+        if not re.match("[a-zA-Z0-9]+", name):
+            
+            raise AssertionError('Provided name is not an name') 
+      
+        return name
+    
+    @validates('power')
+    def validates_power (self, key, power):
+        if not power:
+            raise AssertionError('No power provided')
+     
+        if not re.match("[a-zA-Z0-9]+", power):
+            
+            raise AssertionError('Provided power is not an power') 
+      
+        return power
+    
+    @validates('tier')
+    def validates_tier (self, key, tier):
+        if not tier:
+            raise AssertionError('No tier provided')
+     
+        if not re.match("[a-zA-Z0-9]+", tier):
+            
+            raise AssertionError('Provided tier is not an tier') 
+      
+        return tier

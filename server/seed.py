@@ -8,7 +8,7 @@
 
 # Local imports
 from app import app
-from models import db, User, Post, Comment, Like, Anime
+from models import db, User, Post,Anime, Manga, Character
 
 if __name__ == '__main__':
     # fake = Faker()
@@ -16,9 +16,9 @@ if __name__ == '__main__':
         print("Deleting Database...")
         User.query.delete()
         Post.query.delete()
-        Comment.query.delete()
-        Like.query.delete()
         Anime.query.delete()
+        Manga.query.delete()
+        Character.query.delete()
 
 
         print("Seeding users...")    
@@ -40,14 +40,6 @@ if __name__ == '__main__':
         ]
         db.session.add_all(posts)
         
-        print("Seeding comments...")
-        comments= []
-        db.session.add_all(comments)
-        
-        # print ("Seeding likes...")
-        # likes = []
-        # db.session.add_all(likes)
-        
         
         print("Seeding anime...")
         animes = [
@@ -60,5 +52,28 @@ if __name__ == '__main__':
         ]
         db.session.add_all(animes)
 
+        print("Seeding manga...")
+        mangas = [
+            Manga(
+            title = 'Noragami',
+            description = 'A minor god seeking to gain widespread worship teams up with a human girl he saved to gain fame, recognition and at least one shrine dedicated to him. A minor god seeking to gain widespread worship teams up with a human girl he saved to gain fame, recognition and at least one shrine dedicated to him.',
+            genre= 'Action, Adventure, Comedy, Drama, Fantasy, Shounen, Supernatural',
+            image_url = 'https://4.bp.blogspot.com/-MyWXgXCbtFc/Vv1Q-lf5fFI/AAAAAAAAAvc/EzIJv542GCQ0K_FZMrWKT0h7uA58XkCTw/s1600/yato-kami.jpg'
+            ),
+        ]
+        db.session.add_all(mangas)
+        
+        print("Seeding characters...")
+        characters = [
+            Character(
+                name = 'Eren Jaeger',
+                image_url = 'https://quotesanalysis.com/history/content/images/2022/11/eren-yeager-0.png',
+                power = 'Titan Shifter',
+                tier = 'S',
+                bio = 'Eren Jaeger is the main protagonist of the series. He is a member of the Survey CorpsHe is the son of Grisha Jaeger and Carla Yeager, and the grandson of Dina Fritz. He is also the nephew of Rod Reiss and the cousin of Historia Reiss. Who did nothing wrong!'
+                
+            )]
+        db.session.add_all(characters)
+        
         db.session.commit()
         # Seed code goes here!

@@ -24,6 +24,8 @@ function Navbar ({user, onLogout}) {
       <nav className="navbar">
           <div className='links'>
               <Link to='/'>The Otaku Chronicles</Link>
+              <Link to='/mangas'>Mangas</Link>
+              <Link to='/characters'>Characters</Link>
               <Link to='/addanime'>New Anime</Link>
               <Link to='/anime' 
               >Anime</Link>

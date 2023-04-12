@@ -11,7 +11,7 @@
     box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
 }
 
-.subject{
+.form-subject{
     width: 300px;
     height: 50px;
     border-radius: 10px;
@@ -22,9 +22,19 @@
     margin-bottom: 20px;
 }
 
-.text{
+.form-text{
     width: 300px;
     height: 200px;
+    border-radius: 10px;
+    border: .7px solid #ccc;
+    padding: 5px;
+    font-size: 14px;
+
+    margin-bottom: 20px;
+}
+.form-username{
+    width: 300px;
+    height: 50px;
     border-radius: 10px;
     border: .7px solid #ccc;
     padding: 5px;

@@ -8,6 +8,7 @@ function Anime({animes}){
         <div>
             <ul className="Anime">{animes.map(anime => 
             <AnimeList 
+            key={anime.id}
             anime = {anime}
             />)} 
             </ul>

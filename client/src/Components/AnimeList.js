@@ -1,8 +1,10 @@
 import React from "react";
+
 import "./Anime.css"
 
 function AnimeList({anime}){
 const {title, genre, image_url, description} = anime
+  
 
     return(
         <div className="anime-container">

@@ -1,0 +1,37 @@
+.character-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 500px;
+    height: 500px;
+    background-color: #1a1a1a;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 300;
+    padding: 0 1rem;
+}
+
+.character-image{
+    width: 20%;
+    height: 20%;
+    object-fit: cover;
+}
+
+.character-name{
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.character-power{
+    font-size: 1.1rem;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.character-bio{
+    font-size: 1rem;
+    font-weight: 300;
+     
+}
