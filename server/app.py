@@ -243,7 +243,7 @@ class AnimesByID(Resource):
         )
         
         return response
-#signup route
+
 
 class Mangas(Resource):
     def get(self):
@@ -267,7 +267,60 @@ class Mangas(Resource):
         )
         db.session.add(new_manga)
         db.session.commit()
+    
         return new_manga.to_dict()
+    
+    
+class MangasByID(Resource):
+    def get(self, id):
+        manga = Manga.query.filter_by(id=id).first()
+        
+        if not manga:
+            abort(404, 'Manga not found')
+            
+        manga_dict = manga.to_dict()
+        
+        response = make_response(
+            jsonify(manga_dict),
+            200
+        )
+        return response
+    
+    def patch(self, id):
+        manga = Manga.query.filter_by(id=id).first()
+        
+        if not manga:
+            abort(404, 'Manga not found')
+            
+        data = request.get_json()
+        for key in data:
+            setattr(manga, key, data[key])
+            
+        db.session.add(manga)
+        db.session.commit()
+        
+        response = make_response(
+            manga.to_dict(),
+            200,
+        )
+        
+        return response
+    
+    def delete(self, id):
+        manga = Manga.query.filter_by(id=id).first()
+        
+        if not manga:
+            abort(404, 'Manga not found')
+            
+        db.session.delete(manga)
+        db.session.commit()
+        
+        response = make_response(
+            '',
+            204,
+        )
+        
+        return response
 
 class Characters(Resource):
     def get(self):
@@ -293,6 +346,61 @@ class Characters(Resource):
         db.session.add(new_character)
         db.session.commit()
         return new_character.to_dict()
+    
+    
+    
+class CharactersByID(Resource):
+    
+    
+    def get(self,id):
+        character = Character.query.filter_by(id=id).first()
+        
+        if not character:
+            abort(404, 'Character not found')
+            
+        character_dict = character.to_dict()
+        
+        response = make_response(
+            jsonify(character_dict),
+            200
+        )
+        return response
+    
+    def patch(self, id):
+        character = Character.query.filter_by(id=id).first()
+        
+        if not character:
+            abort(404, 'Character not found')
+            
+        data = request.get_json()
+        for key in data:
+            setattr(character, key, data[key])
+            
+        db.session.add(character)
+        db.session.commit()
+        
+        response = make_response(
+            character.to_dict(),
+            200,
+        )
+        
+        return response
+    
+    def delete(self, id):
+        character = Character.query.filter_by(id=id).first()
+        
+        if not character:
+            abort(404, 'Character not found')
+            
+        db.session.delete(character)
+        db.session.commit()
+        
+        response = make_response(
+            '',
+            204,
+        )
+        
+        return response
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -353,11 +461,13 @@ def logout():
     
   
 #Routes for Resources
+api.add_resource(MangasByID, '/manga/<int:id>', endpoint='mangaID')
+api.add_resource(CharactersByID, '/characters/<int:id>', endpoint='characterID')
 api.add_resource(Characters, '/characters', endpoint='character')
 api.add_resource(Mangas, '/manga', endpoint='manga')
 api.add_resource(AnimesByID, '/anime/<int:id>', endpoint='animeID')
 api.add_resource(Animes, '/anime', endpoint='anime')
-api.add_resource(PostsByID, '/api/posts/<int:id>')
+api.add_resource(PostsByID, '/posts/<int:id>')
 api.add_resource(Posts, '/posts', endpoint='posts')
 api.add_resource(UsersByID, '/users/<int:id>', endpoint='usersId')   
 api.add_resource(Users, '/users/', endpoint='users')  

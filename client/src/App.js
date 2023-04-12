@@ -5,11 +5,9 @@ import Blog from "./Routes/Blog";
 import Anime from "./Routes/Anime";
 import NavBar from "./Components/NavBar";
 import Profile from "./Routes/Profile";
-import AddPost from "./Components/AddPost";
-import AddAnime from "./Components/AddAnime";
 import Character from "./Routes/Character";
 import Mangas from "./Routes/Mangas";
-
+import AddNew from "./Routes/AddNew";
 
 function App() {
   // Code goes here!
@@ -22,7 +20,7 @@ function App() {
   
 
   function handleDelete(id) {
-    fetch(`/api/posts/${id}`, {
+    fetch(`/posts/${id}`, {
       method: "DELETE",
     })
       .then((r) => r.json())
@@ -112,8 +110,7 @@ function App() {
         <Route path="/blog" element={<Blog  posts={posts} setPosts={setPosts} handleDelete={handleDelete} />} />
         <Route path="/anime" element={<Anime animes={animes} />} />
         <Route path="/profile" element={<Profile user={user} setUser={setUser} />} />
-        <Route path="/addpost" element={<AddPost user={user} setUser={setUser} setPosts={setPosts} />} />
-        <Route path="/addanime" element={<AddAnime user={user} setUser={setUser} setAnimes={setAnimes} />} />
+        <Route path="/addnew" element={<AddNew setPosts={setPosts} setAnimes={setAnimes} setCharacters={setCharacters} setMangas={setMangas} />} />
         <Route path="/characters" element={<Character characters={characters} />} />
         <Route path="/mangas" element={<Mangas mangas={mangas}/>} />
       </Routes>

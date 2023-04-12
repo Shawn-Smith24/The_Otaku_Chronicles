@@ -26,12 +26,11 @@ function Navbar ({user, onLogout}) {
               <Link to='/'>The Otaku Chronicles</Link>
               <Link to='/mangas'>Mangas</Link>
               <Link to='/characters'>Characters</Link>
-              <Link to='/addanime'>New Anime</Link>
               <Link to='/anime' 
               >Anime</Link>
               <Link to='/blog' 
               >Blog</Link>
-              <Link to='/addpost'>New Post</Link>
+              <Link to='/addnew'>Add New</Link>
               <Link to='/profile' 
               >Profile</Link>
               {user ?

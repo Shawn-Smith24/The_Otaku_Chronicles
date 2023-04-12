@@ -32,6 +32,7 @@ function AddPost({setPosts, users}) {
   return (
     <div>
         <form className="post-form" onSubmit={handleSubmit}>
+            <label htmlFor="Post">New Posts</label>
             <label htmlFor="Subject">Subject</label>
             <input
                 type="text"

@@ -39,21 +39,6 @@
     color: #fff;
 }
 
-.like-delete{
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-.like{
-    width: 60px;
-    height: 40px;
-    border-radius: 20px;
-    border: .7px solid #ccc;
-    padding: 7px;
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 20px;
-}
 .delete{
     width: 60px;
     height: 40px;

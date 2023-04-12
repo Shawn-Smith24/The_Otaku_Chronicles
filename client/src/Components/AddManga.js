@@ -1,50 +1,41 @@
 
-import { useState, React} from "react";
-import { useNavigate } from "react-router-dom";
-import './AddAnime.css'
+import { useState, React } from "react"
+import './AddManga.css'
 
-function AddAnime({setAnime}) {
-    let navigate = useNavigate()
-    
+
+function AddManga({setManga}){
     const [title, setTitle] = useState('')
     const [image_url, setImageUrl] = useState('')
     const [description, setDescription] = useState('')
     const [genre, setGenre] = useState('')
 
 
-
-    function redirect() {
-        navigate('/')
-    }
-
-    function handleSubmit (e){
+    function handleSubmit(e){
         e.preventDefault()
-        const anime = {
+        const manga = {
             title,
             image_url,
             description,
             genre
         }
 
-        fetch('/anime', {
+        fetch('/manga', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(anime)
+            body: JSON.stringify(manga)
         })
         .then(() =>{
-            window.alert('New Anime Added')
-            // setAnime(anime)
+            window.alert('New Manga Added')
+            // setManga(manga)
         })
-        
-        .then(redirect())
-        
     }
 
+    
 
-    return (
-        <div>
-        <form className="anime-form" onSubmit={handleSubmit} >
-            <label htmlFor="anime-form">Anime Form</label>
+    return(
+        <div>    
+        <form className="manga-form" onSubmit={handleSubmit} >
+            <label htmlFor="manga">Manga Form</label>
             <label htmlFor="title">Title</label>
             <input 
             type="text" 
@@ -77,12 +68,11 @@ function AddAnime({setAnime}) {
             value={genre}
             onChange={(e) => setGenre(e.target.value)}
             />
-            <button className="add" onSubmit={handleSubmit} >Add Anime</button>
+            <button className="add-manga" onSubmit={handleSubmit} >Add Manga</button>
         </form>
         </div>
-       
     )
 
 }
 
-export default AddAnime;
+export default AddManga
