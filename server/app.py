@@ -42,19 +42,6 @@ class Users(Resource):
 
         return response
     
-    def post(self):
-        data = request.get_json()
-        new_user = User(
-            first_name=data['first_name'],
-            last_name=data['last_name'],
-            user_name=data['user_name'],
-            email=data['email'],
-            password_hash=data['password_hash'],
-        )
-        db.session.add(new_user)
-        db.session.commit()
-        return new_user.to_dict()
-    
 class UsersByID(Resource):
     def get(self, id):
         user = User.query.filter_by(id=id).first()
