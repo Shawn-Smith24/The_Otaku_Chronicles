@@ -128,16 +128,7 @@ class Anime(db.Model, SerializerMixin):
       
         return title
     
-    @validates('description')
-    def validates_description (self, key, description):
-        if not description:
-            raise AssertionError('No description provided')
-     
-        if not re.match("[a-zA-Z0-9]+", description):
-            
-            raise AssertionError('Provided description is not an description') 
-      
-        return description
+   
     
     @validates('image_url')
     def validates_image_url (self, key, image_url):

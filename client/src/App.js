@@ -19,16 +19,7 @@ function App() {
   
   
 
-  function handleDelete(id) {
-    fetch(`/posts/${id}`, {
-      method: "DELETE",
-    })
-      .then((r) => r.json())
-      .then(() => {
-        const updatedPosts = posts.filter((post) => post.id !== id);
-        setPosts(updatedPosts);
-      });
-  }
+  
 
 // Characters GET
   useEffect(() => {
@@ -107,7 +98,7 @@ function App() {
       <NavBar user={user} onLogout={onLogout} />
       <Routes>
         <Route path="/" element={<WelcomePage />} />
-        <Route path="/blog" element={<Blog  posts={posts} setPosts={setPosts} handleDelete={handleDelete} />} />
+        <Route path="/blog" element={<Blog  posts={posts} setPosts={setPosts}  />} />
         <Route path="/anime" element={<Anime animes={animes} />} />
         <Route path="/profile" element={<Profile user={user} setUser={setUser} />} />
         <Route path="/addnew" element={<AddNew setPosts={setPosts} setAnimes={setAnimes} setCharacters={setCharacters} setMangas={setMangas} />} />

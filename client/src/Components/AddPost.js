@@ -23,7 +23,7 @@ function AddPost({setPosts, users}) {
             })
             .then(() =>{
                 console.log('New Post Added')
-                setPosts(post)
+                setPosts([post])
             })
     }
 

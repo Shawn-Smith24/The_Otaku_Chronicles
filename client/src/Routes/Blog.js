@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Posts from "../Components/Posts";
 
 
-function Blog({ users, posts, setPosts, handleDelete}) {
+function Blog({ users, posts, setPosts}) {
 
 
 
@@ -14,7 +14,6 @@ function Blog({ users, posts, setPosts, handleDelete}) {
                     users={users}
                     post={post}
                     setPosts={setPosts}
-                    handleDelete={handleDelete}
                 />)}
             </ul>
         </div>
