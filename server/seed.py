@@ -33,7 +33,7 @@ if __name__ == '__main__':
         print("Seeding posts...")
         posts = [
             Post(
-                subject = 'Testing Posts',
+                subject = 'testing posts',
                 text = 'This is a test post',
                 username = 'shawnsmith'
             ), 
@@ -82,6 +82,13 @@ if __name__ == '__main__':
             genre= 'Action, Adventure, Comedy, Drama, Fantasy, Shounen, Supernatural',
             image_url = 'https://4.bp.blogspot.com/-MyWXgXCbtFc/Vv1Q-lf5fFI/AAAAAAAAAvc/EzIJv542GCQ0K_FZMrWKT0h7uA58XkCTw/s1600/yato-kami.jpg'
             ),
+            Manga(
+                title = 'Tower of God',
+                description = 'The Tower of God is a mysterious place of unfathomable height, said to contain the most dangerous creatures and the most unimaginable treasures. The Tower of God is a mysterious place of unfathomable height, said to contain the most dangerous creatures and the most unimaginable treasures.',
+                genre = 'Action, Fiction, Dark Fantasy',
+                image_url = 'https://upload.wikimedia.org/wikipedia/en/7/7d/Tower_of_God_Volume_1_Cover.jpg'
+                
+            )
         ]
         db.session.add_all(mangas)
         

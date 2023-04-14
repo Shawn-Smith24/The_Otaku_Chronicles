@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Posts from "../Components/Posts";
+import EditPost from "../Components/EditPost";
 
 
 function Blog({ users, posts, setPosts}) {
