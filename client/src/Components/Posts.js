@@ -73,7 +73,7 @@ function Posts({ post, setPosts }) {
         // Render editing form here
         <form>
           { 
-            <form className="shadow-lg bg-[#000300] p-12">
+            <form className="shadow-lg bg-[#000300] p-10">
             <label htmlFor="subject" className="p-2 text-[#beef00]">Subject: </label>
                 <input
                     type="text"
@@ -115,7 +115,7 @@ function Posts({ post, setPosts }) {
       ) : (
         // Render display view here
         <div>
-          {<div className="shadow-2xl bg-[#d4d4dc] text-black p-8 text-center ml-auto mr-auto mt-auto w-[700px] rounded-2xl border-b-4 border-t-0 border-[#000300]" key={id}>
+          {<div className="shadow-2xl bg-[#d4d4dc] text-black p-8 text-center ml-auto mr-auto mt-auto w-[500px] rounded-2xl border-b-4 border-t-0 border-[#000300]" key={id}>
                 
                 <h2 className="px-8 py-4 text-4xl shadow-2xl rounded-3xl ">{subject}</h2>
                 <h3 className="px-8 py-4 text-2xl shadow-xl rounded-3xl "> {username}</h3>
