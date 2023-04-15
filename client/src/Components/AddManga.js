@@ -1,6 +1,6 @@
 
 import { useState, React } from "react"
-import './AddManga.css'
+
 
 
 function AddManga({setManga}){
@@ -33,9 +33,9 @@ function AddManga({setManga}){
     
 
     return(
-        <div>    
-        <form className="manga-form" onSubmit={handleSubmit} >
-            <label htmlFor="manga">Manga Form</label>
+        <div >    
+        <form className="shadow-2xl bg-[#d4d4dc] text-black p-8 text-center ml-auto mr-auto mt-auto w-[700px] rounded-2xl border-b-4 border-t-0 border-[#000300]" onSubmit={handleSubmit} >
+            <label htmlFor="manga" >Manga Form</label>
             <label htmlFor="title">Title</label>
             <input 
             type="text" 

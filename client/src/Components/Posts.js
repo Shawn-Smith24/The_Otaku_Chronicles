@@ -1,8 +1,7 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
-import "./Posts.css";
-import EditPost from "./EditPost";
+
 
 
 
@@ -69,13 +68,13 @@ function Posts({ post, setPosts }) {
 
     return (
         
-<div>
+<div className="p-4">
       {isEditing ? (
         // Render editing form here
         <form>
           { 
-            <form className="edit-form">
-            <label htmlFor="subject">Subject</label>
+            <form className="shadow-lg bg-[#000300] p-12">
+            <label htmlFor="subject" className="p-2 text-[#beef00]">Subject: </label>
                 <input
                     type="text"
                     name="subject"
@@ -83,7 +82,7 @@ function Posts({ post, setPosts }) {
                     value={updatedPosts.subject}
                     onChange={handleSubjectChange}
                 />
-                <label htmlFor="text">Text</label>
+                <label htmlFor="text" className="p-2 text-[#beef00]">Text: </label>
                 <input
                     type="text"
                     name="text"
@@ -91,7 +90,7 @@ function Posts({ post, setPosts }) {
                     value={updatedPosts.text}
                     onChange={handleTextChange}
                 />
-                <label htmlFor="username">Username</label>
+                <label htmlFor="username"  className="p-6 text-[#beef00]">Username: </label>
                 <input
                     type="text"
                     name="username"
@@ -100,12 +99,12 @@ function Posts({ post, setPosts }) {
                     onChange={handleUsernameChange}
                 />
                 <button type="submit"
-                className="edit-submit"
+                className="shadow-2xl border-r-6 text-[#beef00] p-2"
                 onClick={handleSubmit}>
-                    Submit
+                    Save
                 </button>
                 <button type="button"
-                className="edit-cancel"
+                className="shadow-2xl border-r-6 text-[#beef00] p-2"
                 onClick={handleCancelEdit}>
                     Cancel
                 </button>
@@ -116,14 +115,14 @@ function Posts({ post, setPosts }) {
       ) : (
         // Render display view here
         <div>
-          {<div className="posts" key={id}>
+          {<div className="shadow-2xl bg-[#d4d4dc] text-black p-8 text-center ml-auto mr-auto mt-auto w-[700px] rounded-2xl border-b-4 border-t-0 border-[#000300]" key={id}>
                 
-                <h2 className="subject">{subject}</h2>
-                <h3 className="post-username"> {username}</h3>
-                <p className="text"> {text}</p>
-                <div className="edit-delete">
-                    <button className="delete" onClick={handleDelete}>Delete</button>
-                    <button className="edit" onClick={handleEditClick}>Edit</button>
+                <h2 className="px-8 py-4 text-4xl shadow-2xl rounded-3xl ">{subject}</h2>
+                <h3 className="px-8 py-4 text-2xl shadow-xl rounded-3xl "> {username}</h3>
+                <p className="px-4 py-4 text-xl shadow-lg rounded-3xl "> {text}</p>
+                <div className="px-6 py-4">
+                    <button className="px-2 py-4 shadow-2xl border-r-6 text-lg text-black p-2 rounded-3xl hover:bg-slate-600" onClick={handleDelete}>Delete</button>
+                    <button className="px-2 py-4 shadow-2xl border-r-6 text-lg text-black p-2 rounded-3xl hover:bg-slate-600" onClick={handleEditClick}>Edit</button>
                 </div>
                
 

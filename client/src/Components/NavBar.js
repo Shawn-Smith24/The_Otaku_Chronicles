@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import './NavBar.css'
+
 
 
 function Navbar ({user, onLogout}) {
@@ -21,21 +21,21 @@ function Navbar ({user, onLogout}) {
     }
 
   return (
-      <nav className="navbar">
-          <div className='links'>
-              <Link to='/'>The Otaku Chronicles</Link>
-              <Link to='/mangas'>Mangas</Link>
-              <Link to='/characters'>Characters</Link>
-              <Link to='/anime' 
+      <nav className='flex sticky top-0 z-50 justify-center bg-[#000300]  w-full text-3xl items-center max-w-[1640px] font-bold text-white '>
+          <div className='flex'>
+              <Link to='/' className='p-4 hover:text-[#beef00]  '>The Otaku Chronicles</Link>
+              <Link to='/mangas' className='p-4 hover:text-[#beef00] '>Mangas</Link>
+              <Link to='/characters' className='p-4 hover:text-[#beef00]'>Characters</Link>
+              <Link to='/anime' className='p-4 hover:text-[#beef00]'
               >Anime</Link>
-              <Link to='/blog' 
+              <Link to='/blog' className='p-4 hover:text-[#beef00]'
               >Blog</Link>
-              <Link to='/addnew'>Add New</Link>
-              <Link to='/profile' 
+              <Link to='/addnew' className='p-4 hover:text-[#beef00]'>Add New</Link>
+              <Link to='/profile' className='p-4 hover:text-[#beef00]'
               >Profile</Link>
               {user ?
-                  <Link to="/logout">
-                      <button className="NavBarButton" onClick={handleLogout}>Logout</button>
+                  <Link to="/logout" className='flex hover:text-[#beef00]'>
+                      <button className="p-4 hover:text-[#beef00]" onClick={handleLogout}>Logout</button>
                   </Link>
                   : ''
               }

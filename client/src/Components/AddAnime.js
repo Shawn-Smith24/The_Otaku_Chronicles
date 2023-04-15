@@ -1,7 +1,7 @@
 
 import { useState, React} from "react";
 import { useNavigate } from "react-router-dom";
-import './AddAnime.css'
+
 
 function AddAnime({setAnime}) {
     let navigate = useNavigate()
@@ -43,7 +43,7 @@ function AddAnime({setAnime}) {
 
     return (
         <div>
-        <form className="anime-form" onSubmit={handleSubmit} >
+        <form className="shadow-2xl bg-[#d4d4dc] text-black p-8 items-center text-center ml-auto mr-auto mt-auto w-[600px] h-[400px] rounded-2xl border-b-4 border-t-0 border-[#000300]" onSubmit={handleSubmit} >
             <label htmlFor="anime-form">Anime Form</label>
             <label htmlFor="title">Title</label>
             <input 

@@ -9,6 +9,7 @@ import Character from "./Routes/Character";
 import Mangas from "./Routes/Mangas";
 import AddNew from "./Routes/AddNew";
 
+
 function App() {
   // Code goes here!
   const [user, setUser] = useState(null);
@@ -94,7 +95,7 @@ function App() {
 
 
   return (
-    <>
+    <div className="text-2xl font-bold ">
       <NavBar user={user} onLogout={onLogout} />
       <Routes>
         <Route path="/" element={<WelcomePage />} />
@@ -106,7 +107,7 @@ function App() {
         <Route path="/mangas" element={<Mangas mangas={mangas}/>} />
       </Routes>
 
-    </>
+    </div>
   )
 }
 

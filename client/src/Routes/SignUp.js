@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as yup from 'yup';
-import './SignUp.css';
+
 
 
 function SignUp({ setUser, user }) {
@@ -59,41 +59,41 @@ const formik = useFormik({
 
   return (
     <div>
-      <form className="form" onSubmit={formik.handleSubmit}>
-        <label htmlFor="username">Username:</label>
+      <form className="w-500px h-350px  p-6 mx-[500px] " onSubmit={formik.handleSubmit}>
+        <label htmlFor="username" className="text-[#beef00]">Username:</label>
         <br />
         <input
           id="username"
-          className='username'
+          className='rounded-xl'
           name="username"
           onChange={formik.handleChange}
           value={formik.values.username}
         />
-        <p > {formik.errors.username}</p>
+        <p className="text-[#beef00]"> {formik.errors.username}</p>
 
-        <label htmlFor="password">Password:</label>
+        <label htmlFor="password" className="text-[#beef00]" >Password:</label>
         <br />
         <input
           id="password"
           name="password"
-          className='password'
+          className='rounded-xl'
           onChange={formik.handleChange}
           value={formik.values.password}
         />
-        <p> {formik.errors.password}</p>
+        <p className="text-[#beef00]"> {formik.errors.password}</p>
 
-        <label htmlFor="confirm-password">Confirm Password:</label>
+        <label htmlFor="confirm-password" className="text-[#beef00]">Confirm Password:</label>
         <br />
         <input
           id="confirm-password"
           name="confirmPassword"
-          className='password'
+          className='rounded-xl'
           onChange={formik.handleChange}
           value={formik.values.confirmPassword}
         />
-        <p> {formik.errors.confirmPassword}</p>
+        <p className="text-[#beef00]"> {formik.errors.confirmPassword}</p>
 
-        <button type="submit">Submit</button>
+        <button type="submit" className="text-[#beef00] animate-pulse">Sign Up</button>
       </form>
     </div>
   )

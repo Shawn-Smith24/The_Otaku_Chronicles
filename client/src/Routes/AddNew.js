@@ -6,7 +6,7 @@ import AddPost from "../Components/AddPost";
 
 function AddNew({setPosts, setAnimes, setCharacters, setMangas}) {
   return (
-    <div>
+    <div className="p-4">
         <AddPost setPosts={setPosts} />
         <AddAnime setAnimes={setAnimes} />
         <AddCharacter setCharacters={setCharacters} />

@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import './WelcomePage.css'
+import React from "react";
+
 
 function WelcomePage(){
 
     return(
-        <div className="welcome">
+        <div className="flex justify-center text-3xl font-bold text-[#beef00] animate-pulse ">
             Welcome to The Otaku Chronicles!
         </div>
     )

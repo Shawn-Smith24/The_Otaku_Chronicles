@@ -1,5 +1,4 @@
 import {useState, React} from "react";
-import "./AddCharacter.css";
 
 function AddCharacter({setCharacters}) {
     const [name, setName] = useState('')
@@ -32,7 +31,7 @@ function AddCharacter({setCharacters}) {
 
   return (
     <div>
-      <form className="character-form" onSubmit={handleSubmit}>
+      <form className="shadow-2xl bg-[#d4d4dc] text-black p-8 text-center ml-auto mr-auto mt-auto w-[700px] rounded-2xl border-b-4 border-t-0 border-[#000300]" onSubmit={handleSubmit}>
         <label htmlFor="character-form">Character Form</label>
         <label htmlFor="Name">Name</label>
         <input 

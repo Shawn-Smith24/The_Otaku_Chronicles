@@ -1,7 +1,7 @@
 import {useFormik} from "formik";
 import { redirect, useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import './Login.css'
+
 
 function Login({user, setUser}) {
 
@@ -52,32 +52,32 @@ function Login({user, setUser}) {
 
     return (
         <div>
-            <form onSubmit={formik.handleSubmit}>
-                <h1>Login</h1>
+            <form onSubmit={formik.handleSubmit} className="w-500px h-350px  p-8 mx-[500px] ">
+                
 
-                <label htmlFor="username">Username:</label>
+                <label htmlFor="username" className="text-[#beef00]">Username:</label>
                 <br />
                 <input
                     id="username"
                     name="username"
-                    className="username"
+                    className="rounded-xl"
                     onChange={formik.handleChange}
                     value={formik.values.username}
                 />
-                <p > {formik.errors.username}</p>
+                <p className="text-[#beef00]"> {formik.errors.username}</p>
 
-                <label htmlFor="password">Password:</label>
+                <label htmlFor="password" className="text-[#beef00]">Password:</label>
                 <br />
                 <input
                     id="password"
                     type="password"
                     name="password"
-                    className="password"
+                    className="rounded-xl"
                     onChange={formik.handleChange}
                     value={formik.values.password}
                 />
-                <p> {formik.errors.password}</p>
-                <button type="submit">Submit</button>
+                <p className="text-[#beef00]">  {formik.errors.password}</p>
+                <button type="submit" className="text-[#beef00] animate-pulse">Login</button>
             </form>
         </div>
     )
