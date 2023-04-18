@@ -21,7 +21,7 @@ function Navbar ({user, onLogout}) {
     }
 
   return (
-      <nav className='flex sticky top-0 z-50 justify-center bg-[#000300]  w-full text-3xl items-center max-w-[1640px] font-bold text-white '>
+      <nav className='flex sticky top-0 z-50 justify-center bg-[#000300]  w-full text-3xl items-center max-w-[2040px] font-bold text-white '>
           <div className='flex'>
               <Link to='/' className='p-4 hover:text-[#beef00]  '>The Otaku Chronicles</Link>
               <Link to='/mangas' className='p-4 hover:text-[#beef00] '>Mangas</Link>

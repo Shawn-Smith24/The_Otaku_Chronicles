@@ -28,7 +28,10 @@ function Posts({ post, setPosts }) {
                 const updatedPosts = post.filter((post) => post.id !== id);
                 setUpdatedPosts(updatedPosts);
             });
+            
     }
+
+   
 
 
     const handleSubjectChange = (e) => {
@@ -117,7 +120,7 @@ function Posts({ post, setPosts }) {
         <div>
           {<div className="shadow-2xl bg-[#d4d4dc] text-black p-8 text-center ml-auto mr-auto mt-auto w-[500px] rounded-2xl border-b-4 border-t-0 border-[#000300]" key={id}>
                 
-                <h2 className="px-8 py-4 text-4xl shadow-2xl rounded-3xl ">{subject}</h2>
+                <h2 className="px-8 py-4 text-4xl shadow-2xl rounded-3xl  ">{subject}</h2>
                 <h3 className="px-8 py-4 text-2xl shadow-xl rounded-3xl "> {username}</h3>
                 <p className="px-4 py-4 text-xl shadow-lg rounded-3xl "> {text}</p>
                 <div className="px-6 py-4">

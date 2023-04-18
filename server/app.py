@@ -158,6 +158,7 @@ class PostsByID(Resource):
         db.session.delete(post)
         db.session.commit()
         
+        
         response = make_response(
             '',
             204,

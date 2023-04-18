@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from "react";
 import Posts from "../Components/Posts";
-import EditPost from "../Components/EditPost";
+
 
 
 function Blog({ users, posts, setPosts}) {
 
+ // Posts GET
+ useEffect(() => {
+    fetch(`/posts`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      },)
+      .then(res => res.json())
+      .then(posts => setPosts(posts))
+      .catch(err => console.error(err));
+  }, [setPosts]);
 
 
     return (

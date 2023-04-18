@@ -1,9 +1,21 @@
-import React from "react";
+import React, {useEffect} from "react";
 import CharacterList from "../Components/CharacterList";
 
 
-function Character({ characters }) {
-    
+function Character({ characters, setCharacters }) {
+    // Characters GET
+  useEffect(() => {
+    fetch("/characters", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((characters) => setCharacters(characters))
+      .catch((err) => console.error(err));
+  }, [setCharacters]);
+
 
   return (
     <div>

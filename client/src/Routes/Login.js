@@ -8,7 +8,7 @@ function Login({user, setUser}) {
     const navigate = useNavigate();
 
     const redirectUser = () => {
-        navigate("/mangas")
+        navigate("/")
     }
 
     const formSchema = yup.object().shape({
@@ -52,7 +52,7 @@ function Login({user, setUser}) {
 
     return (
         <div>
-            <form onSubmit={formik.handleSubmit} className="w-500px h-350px  p-8 mx-[500px] ">
+            <form onSubmit={formik.handleSubmit} className="w-500px h-350px  p-8 mx-[750px] ">
                 
 
                 <label htmlFor="username" className="text-[#beef00]">Username:</label>

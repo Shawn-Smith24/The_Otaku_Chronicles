@@ -14,7 +14,7 @@ function AddAnime({setAnime}) {
 
 
     function redirect() {
-        navigate('/')
+        navigate('/anime')
     }
 
     function handleSubmit (e){

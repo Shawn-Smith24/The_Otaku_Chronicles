@@ -19,7 +19,7 @@ function SignUp({ setUser, user }) {
   const navigate = useNavigate();
       
   const redirectAccount = () => {
-    navigate("/anime")
+    navigate("/")
   }
 
 
@@ -59,7 +59,7 @@ const formik = useFormik({
 
   return (
     <div>
-      <form className="w-500px h-350px  p-6 mx-[500px] " onSubmit={formik.handleSubmit}>
+      <form className="w-500px h-350px  p-6 mx-[750px] " onSubmit={formik.handleSubmit}>
         <label htmlFor="username" className="text-[#beef00]">Username:</label>
         <br />
         <input

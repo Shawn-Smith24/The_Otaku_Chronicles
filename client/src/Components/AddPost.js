@@ -1,6 +1,6 @@
-import React from "react";
-
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 
 function AddPost({setPosts, users}) {
@@ -8,6 +8,12 @@ function AddPost({setPosts, users}) {
     const [subject, setSubject] = useState('')
     const [text, setText] = useState('')
     const [username, setUserName] = useState('')
+
+    let navigate = useNavigate()
+
+    function redirect(){
+        navigate('/blog')
+    }
 
     function handleSubmit (e){
         e.preventDefault()
@@ -23,8 +29,10 @@ function AddPost({setPosts, users}) {
             })
             .then(() =>{
                 console.log('New Post Added')
+                window.alert('New Post Added')
                 setPosts([post])
             })
+            .then(redirect())
     }
 
     

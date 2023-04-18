@@ -1,6 +1,6 @@
 
 import { useState, React } from "react"
-
+import { useNavigate } from "react-router-dom"
 
 
 function AddManga({setManga}){
@@ -9,6 +9,11 @@ function AddManga({setManga}){
     const [description, setDescription] = useState('')
     const [genre, setGenre] = useState('')
 
+    let navigate = useNavigate()
+
+    function redirect(){
+        navigate('/mangas')
+    }
 
     function handleSubmit(e){
         e.preventDefault()
@@ -26,8 +31,10 @@ function AddManga({setManga}){
         })
         .then(() =>{
             window.alert('New Manga Added')
-            // setManga(manga)
+            
         })
+
+        .then(redirect())
     }
 
     

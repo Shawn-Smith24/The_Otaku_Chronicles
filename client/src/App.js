@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route, useNavigate} from "react-router-dom";
+import { Routes, Route} from "react-router-dom";
 import WelcomePage from "./Routes/WelcomePage";
 import Blog from "./Routes/Blog";
 import Anime from "./Routes/Anime";
@@ -8,6 +8,9 @@ import Profile from "./Routes/Profile";
 import Character from "./Routes/Character";
 import Mangas from "./Routes/Mangas";
 import AddNew from "./Routes/AddNew";
+
+
+
 
 
 function App() {
@@ -95,19 +98,21 @@ function App() {
 
 
   return (
+  
     <div className="text-2xl font-bold ">
       <NavBar user={user} onLogout={onLogout} />
       <Routes>
         <Route path="/" element={<WelcomePage />} />
         <Route path="/blog" element={<Blog  posts={posts} setPosts={setPosts}  />} />
-        <Route path="/anime" element={<Anime animes={animes} />} />
+        <Route path="/anime" element={<Anime animes={animes}  setAnimes={setAnimes}/>} />
         <Route path="/profile" element={<Profile user={user} setUser={setUser} />} />
         <Route path="/addnew" element={<AddNew setPosts={setPosts} setAnimes={setAnimes} setCharacters={setCharacters} setMangas={setMangas} />} />
-        <Route path="/characters" element={<Character characters={characters} />} />
-        <Route path="/mangas" element={<Mangas mangas={mangas}/>} />
+        <Route path="/characters" element={<Character characters={characters} setCharacters={setCharacters} />} />
+        <Route path="/mangas" element={<Mangas mangas={mangas} setMangas={setMangas}/>} />
       </Routes>
 
     </div>
+
   )
 }
 

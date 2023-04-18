@@ -1,4 +1,5 @@
 import {useState, React} from "react";
+import { useNavigate } from "react-router-dom";
 
 function AddCharacter({setCharacters}) {
     const [name, setName] = useState('')
@@ -6,6 +7,13 @@ function AddCharacter({setCharacters}) {
     const [bio, setBio] = useState('')
     const [power, setPower] = useState('')
     const [tier, setTier] = useState('')
+
+    let navigate = useNavigate()
+
+    function redirect(){
+        navigate('/characters')
+    }
+
 
     function handleSubmit(e){
         e.preventDefault()
@@ -23,8 +31,9 @@ function AddCharacter({setCharacters}) {
         })
         .then(() =>{
             window.alert('New Character Added')
-            setCharacters(character)
+            setCharacters([character])
         })
+        .then(redirect())
     }
 
 
