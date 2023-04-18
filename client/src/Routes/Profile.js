@@ -2,7 +2,8 @@ import {useState} from 'react';
 import Login from './Login';
 import SignUp from './SignUp';
 
-function Profile({user, setUser}){
+
+function Profile(){
     const [profile, setProfile] = useState(true);
 
     
@@ -13,7 +14,7 @@ return(
       <>
         {profile ? (
           <>
-            <Login user={user} setUser={setUser}/>
+            <Login />
             <hr />
 
             <p className="text-[#beef00]">Don't have an profile? &nbsp;
@@ -22,7 +23,7 @@ return(
           </>
         ) :(
           <>
-            <SignUp user={user} setUser={setUser}/>
+            <SignUp />
             <hr />
             <p className="text-[#beef00]">
               Do you have a profile? &nbsp;

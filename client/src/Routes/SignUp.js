@@ -1,10 +1,13 @@
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as yup from 'yup';
+import { UserContext } from "../UserContext";
+import { useContext } from "react";
 
 
+function SignUp() {
+  const [user, setUser] = useContext(UserContext);
 
-function SignUp({ setUser, user }) {
 
   const formSchema = yup.object().shape({
     username: yup.string().required("Must enter username"),
@@ -58,8 +61,8 @@ const formik = useFormik({
     });
 
   return (
-    <div>
-      <form className="w-500px h-350px  p-6 mx-[750px] " onSubmit={formik.handleSubmit}>
+    <div className="w-500px h-350px justify-center p-6 mx-auto " >
+      <form onSubmit={formik.handleSubmit}>
         <label htmlFor="username" className="text-[#beef00]">Username:</label>
         <br />
         <input

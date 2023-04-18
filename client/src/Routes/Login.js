@@ -1,9 +1,12 @@
 import {useFormik} from "formik";
 import { redirect, useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import { UserContext } from "../UserContext";
+import { useContext } from "react";
 
+function Login() {
 
-function Login({user, setUser}) {
+    const [user, setUser] = useContext(UserContext);
 
     const navigate = useNavigate();
 
@@ -51,8 +54,8 @@ function Login({user, setUser}) {
     
 
     return (
-        <div>
-            <form onSubmit={formik.handleSubmit} className="w-500px h-350px  p-8 mx-[750px] ">
+        <div className="w-500px h-350px  p-8 mx-auto ">
+            <form onSubmit={formik.handleSubmit} >
                 
 
                 <label htmlFor="username" className="text-[#beef00]">Username:</label>

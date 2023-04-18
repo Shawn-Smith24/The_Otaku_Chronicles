@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import WelcomePage from "./Routes/WelcomePage";
 import Blog from "./Routes/Blog";
 import Anime from "./Routes/Anime";
@@ -13,19 +13,14 @@ import AddNew from "./Routes/AddNew";
 
 
 
-function App() {
+const App = () => {
   // Code goes here!
-  const [user, setUser] = useState(null);
   const [animes, setAnimes] = useState([]);
   const [posts, setPosts] = useState([]);
   const [characters, setCharacters] = useState([]);
   const [mangas, setMangas] = useState([]);
-  
-  
 
-  
-
-// Characters GET
+  // Characters GET
   useEffect(() => {
     fetch("/characters", {
       method: "GET",
@@ -37,7 +32,6 @@ function App() {
       .then((characters) => setCharacters(characters))
       .catch((err) => console.error(err));
   }, []);
-
   // Mangas GET
   useEffect(() => {
     fetch("/manga", {
@@ -50,23 +44,6 @@ function App() {
       .then((mangas) => setMangas(mangas))
       .catch((err) => console.error(err));
   }, []);
-
-  // Check Session
-  useEffect(() => {
-    fetch("/check_session")
-      .then((r) => {
-        // console.log(r)
-        if (r.ok) {
-          r.json()
-            .then((user) => { setUser(user) });
-        }
-      });
-  }, []);
-
-  function onLogout() {
-    setUser(null);
-  }
-
   // Posts GET
   useEffect(() => {
     fetch(`/posts`,
@@ -80,8 +57,6 @@ function App() {
       .then(posts => setPosts(posts))
       .catch(err => console.error(err));
   }, []);
-
-
   // Anime GET
   useEffect(() => {
     fetch('/anime', {
@@ -98,17 +73,18 @@ function App() {
 
 
   return (
-  
+
     <div className="text-2xl font-bold ">
-      <NavBar user={user} onLogout={onLogout} />
+
+      <NavBar  />
       <Routes>
         <Route path="/" element={<WelcomePage />} />
-        <Route path="/blog" element={<Blog  posts={posts} setPosts={setPosts}  />} />
-        <Route path="/anime" element={<Anime animes={animes}  setAnimes={setAnimes}/>} />
-        <Route path="/profile" element={<Profile user={user} setUser={setUser} />} />
+        <Route path="/blog" element={<Blog posts={posts} setPosts={setPosts} />} />
+        <Route path="/anime" element={<Anime animes={animes} setAnimes={setAnimes} />} />
+        <Route path="/profile" element={<Profile  />  } />
         <Route path="/addnew" element={<AddNew setPosts={setPosts} setAnimes={setAnimes} setCharacters={setCharacters} setMangas={setMangas} />} />
         <Route path="/characters" element={<Character characters={characters} setCharacters={setCharacters} />} />
-        <Route path="/mangas" element={<Mangas mangas={mangas} setMangas={setMangas}/>} />
+        <Route path="/mangas" element={<Mangas mangas={mangas} setMangas={setMangas} />} />
       </Routes>
 
     </div>
