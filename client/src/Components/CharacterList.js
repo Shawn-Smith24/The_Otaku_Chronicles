@@ -1,6 +1,7 @@
 import React from "react";
 
 
+
 function CharacterList({ character }) {
     const {name, power, image_url, bio, tier} = character
 
