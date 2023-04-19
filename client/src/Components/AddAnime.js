@@ -1,21 +1,14 @@
 
-import { useState, React} from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, React, useContext} from "react";
+import { AnimeContext } from "../DisplayContext";
 
-
-function AddAnime({setAnime}) {
-    let navigate = useNavigate()
+function AddAnime() {
+    const [setAnimes] = useContext(AnimeContext);
     
     const [title, setTitle] = useState('')
     const [image_url, setImageUrl] = useState('')
     const [description, setDescription] = useState('')
     const [genre, setGenre] = useState('')
-
-
-
-    function redirect() {
-        navigate('/anime')
-    }
 
     function handleSubmit (e){
         e.preventDefault()
@@ -33,10 +26,10 @@ function AddAnime({setAnime}) {
         })
         .then(() =>{
             window.alert('New Anime Added')
-            // setAnime(anime)
+            setAnimes([anime])
         })
         
-        .then(redirect())
+       
         
     }
 

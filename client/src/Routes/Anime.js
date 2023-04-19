@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useContext } from "react";
+import { AnimeContext } from "../DisplayContext";
 import AnimeList from "../Components/AnimeList";
 
-function Anime({animes, setAnimes}){
+function Anime(){
+  const [animes, setAnimes] = useContext(AnimeContext);
+  
+
+
      // Anime GET
   useEffect(() => {
     fetch('/anime', {

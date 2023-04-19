@@ -1,7 +1,11 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useContext} from "react";
 import MangaList from "../Components/MangaList";
+import {MangaContext} from "../DisplayContext";
 
-function Mangas({mangas, setMangas}) {
+
+function Mangas() {
+
+  const [mangas, setMangas] = useContext(MangaContext);
 
  // Mangas GET
  useEffect(() => {

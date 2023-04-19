@@ -1,18 +1,16 @@
-import {useState, React} from "react";
-import { useNavigate } from "react-router-dom";
+import {useState, React, useContext} from "react";
+import { CharacterContext } from "../DisplayContext";
 
-function AddCharacter({setCharacters}) {
+function AddCharacter() {
+
+    const [setCharacters] = useContext(CharacterContext);
+
+    
     const [name, setName] = useState('')
     const [image_url, setImageUrl] = useState('')
     const [bio, setBio] = useState('')
     const [power, setPower] = useState('')
     const [tier, setTier] = useState('')
-
-    let navigate = useNavigate()
-
-    function redirect(){
-        navigate('/characters')
-    }
 
 
     function handleSubmit(e){
@@ -33,7 +31,8 @@ function AddCharacter({setCharacters}) {
             window.alert('New Character Added')
             setCharacters([character])
         })
-        .then(redirect())
+        
+        
     }
 
 

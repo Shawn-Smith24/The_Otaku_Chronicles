@@ -5,13 +5,24 @@ import './index.css'
 import  {UserProvider} from './UserContext'
 
 import App from './App'
+import {  AnimeProvider, CharacterProvider, MangaProvider, PostsProvider } from './DisplayContext'
 
 ReactDOM.render(
   
     <BrowserRouter>
+
       <UserProvider>
-        <App />
+        <PostsProvider>
+        <AnimeProvider>
+          <CharacterProvider>
+            <MangaProvider>
+            <App />
+            </MangaProvider>
+          </CharacterProvider>
+        </AnimeProvider>
+        </PostsProvider>
       </UserProvider>
+
     </BrowserRouter>,
   
   document.getElementById('root')

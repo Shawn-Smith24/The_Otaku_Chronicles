@@ -4,13 +4,13 @@ import AddManga from "../Components/AddManga";
 import AddAnime from "../Components/AddAnime";
 import AddPost from "../Components/AddPost";
 
-function AddNew({setPosts, setAnimes, setCharacters, setMangas}) {
+function AddNew() {
   return (
     <div >
-        <AddPost setPosts={setPosts} />
-        <AddAnime setAnimes={setAnimes} />
-        <AddCharacter setCharacters={setCharacters} />
-        <AddManga setMangas={setMangas} />
+        <AddPost />
+        <AddAnime  />
+        <AddCharacter  />
+        <AddManga />
     </div>
   );
 }

@@ -1,19 +1,17 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+
+import { PostsContext } from "../DisplayContext";
 
 
+function AddPost() {
+    const [setPosts] = useContext(PostsContext)
 
-function AddPost({setPosts, users}) {
 
     const [subject, setSubject] = useState('')
     const [text, setText] = useState('')
     const [username, setUserName] = useState('')
 
-    let navigate = useNavigate()
-
-    function redirect(){
-        navigate('/blog')
-    }
+   
 
     function handleSubmit (e){
         e.preventDefault()
@@ -32,7 +30,7 @@ function AddPost({setPosts, users}) {
                 window.alert('New Post Added')
                 setPosts([post])
             })
-            .then(redirect())
+            .catch(err => console.error(err));
     }
 
     

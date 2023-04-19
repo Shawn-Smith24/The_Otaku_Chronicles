@@ -1,19 +1,18 @@
 
-import { useState, React } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState, React, useContext } from "react"
+import { MangaContext } from "../DisplayContext"
+
+function AddManga(){
+    const [setMangas] = useContext(MangaContext)
 
 
-function AddManga({setManga}){
+
     const [title, setTitle] = useState('')
     const [image_url, setImageUrl] = useState('')
     const [description, setDescription] = useState('')
     const [genre, setGenre] = useState('')
 
-    let navigate = useNavigate()
-
-    function redirect(){
-        navigate('/mangas')
-    }
+    
 
     function handleSubmit(e){
         e.preventDefault()
@@ -31,10 +30,9 @@ function AddManga({setManga}){
         })
         .then(() =>{
             window.alert('New Manga Added')
-            
+            setMangas([manga])            
         })
 
-        .then(redirect())
     }
 
     

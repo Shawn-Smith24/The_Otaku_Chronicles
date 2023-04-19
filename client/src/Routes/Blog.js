@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import Posts from "../Components/Posts";
+import { PostsContext } from "../DisplayContext";
 
 
 
-function Blog({ users, posts, setPosts}) {
+function Blog() {
+
+  const [posts, setPosts] = useContext(PostsContext);
 
  // Posts GET
  useEffect(() => {
@@ -25,7 +28,6 @@ function Blog({ users, posts, setPosts}) {
             <ul className="Posts">{posts.map(post =>
                 <Posts
                     key={post.id}
-                    users={users}
                     post={post}
                     setPosts={setPosts}
                 />)}

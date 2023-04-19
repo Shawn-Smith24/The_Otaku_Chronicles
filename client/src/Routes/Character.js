@@ -1,8 +1,12 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useContext} from "react";
 import CharacterList from "../Components/CharacterList";
+import {CharacterContext} from "../DisplayContext";
+
+function Character() {
+
+  const [characters, setCharacters] = useContext(CharacterContext);
 
 
-function Character({ characters, setCharacters }) {
     // Characters GET
   useEffect(() => {
     fetch("/characters", {
