@@ -2,17 +2,16 @@ from flask import Flask, make_response, request, abort, jsonify, session
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_restful import Api, Resource
-from models import db, User, Post, Comment, Like
+from models import db, User, Post, Anime, Manga, Character
 from werkzeug.exceptions import NotFound, Unauthorized
-from flask_bcrypt import Bcrypt
-
+import requests
 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
-bcrypt = Bcrypt(app)
+
 
 app.secret_key = b'@~xH\xf2\x10k\x07hp\x85\xa6N\xde\xd4\xcd'
 
@@ -24,13 +23,7 @@ db.init_app(app)
 api = Api(app)
 
 # Views go here!
-
-
-class Home(Resource):
-    def get(self):
-        return {'message': 'Welcome to Goal Oriented Social Media!'}
-    
-    
+   
 class Users(Resource):
 
     def get(self):
@@ -44,19 +37,6 @@ class Users(Resource):
         )
 
         return response
-    
-    def post(self):
-        data = request.get_json()
-        new_user = User(
-            first_name=data['first_name'],
-            last_name=data['last_name'],
-            user_name=data['user_name'],
-            email=data['email'],
-            password=data['password'],
-        )
-        db.session.add(new_user)
-        db.session.commit()
-        return new_user.to_dict()
     
 class UsersByID(Resource):
     def get(self, id):
@@ -92,6 +72,22 @@ class UsersByID(Resource):
         )
         
         return response
+    
+    def delete(self, id):
+        user = User.query.filter_by(id=id).first()
+        
+        if not user:
+            abort(404, 'User not found')
+            
+        db.session.delete(user)
+        db.session.commit()
+        
+        response = make_response(
+            '',
+            204,
+        )
+        
+        return response
 
 class Posts(Resource):
     def get(self):
@@ -104,99 +100,380 @@ class Posts(Resource):
         )
 
         return response
+    
+    def post(self):
+        data = request.get_json()
+        new_post = Post(
+            subject=data['subject'],
+            text=data['text'],
+            username=data['username'],
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        return new_post.to_dict()
+    
+    
 
 class PostsByID(Resource):
-    pass
-
-class Comments(Resource):
-    def get(self):
-        comments = Comment.query.all()
-        comments_dict = [comment.to_dict() for comment in comments]
-
+    def get(self, id):
+        post = Post.query.filter_by(id=id).first()
+        
+        if not post:
+            abort(404, 'Post not found')
+            
+        post_dict = post.to_dict()
+        
         response = make_response(
-            jsonify(comments_dict),
-            200,
+            jsonify(post_dict),
+            200
         )
-
         return response
-
-class CommentsByID(Resource):
-    pass
-
-class Likes(Resource):
-    def get(self):
-        likes = Like.query.all()
-        likes_dict = [like.to_dict() for like in likes]
-
-        response = make_response(
-            jsonify(likes_dict),
-            200,
-        )
-
-        return response
-
-class LikesByID(Resource):
-    pass
-
     
-#signup route
-class Signup(Resource):
-    def post(self):
-        form_json = request.get_json()
-        print(form_json)
-        new_user = User(first_name=form_json['first_name'], last_name=form_json['last_name'], user_name= form_json['user_name'], email=form_json['email'])
-        new_user.password = form_json['password']  # Use the password setter property
-        db.session.add(new_user)
+    def patch(self, id):
+        post = Post.query.filter_by(id=id).first()
+        
+        if not post:
+            abort(404, 'Post not found')
+            
+        data = request.get_json()
+        for key in data:
+            setattr(post, key, data[key])
+            
+        db.session.add(post)
         db.session.commit()
+        
         response = make_response(
-            new_user.to_dict(),
-            201
+            post.to_dict(),
+            200,
+        )
+        
+        return response
+    
+    def delete(self, id):
+        post = Post.query.filter_by(id=id).first()
+        
+        if not post:
+            abort(404, 'Post not found')
+            
+        db.session.delete(post)
+        db.session.commit()
+        
+        
+        response = make_response(
+            '',
+            204,
+        )
+        
+        return response
+
+
+class Animes(Resource):
+    def get(self):
+        animes = Anime.query.all()
+        anime_dict = [anime.to_dict() for anime in animes]
+
+        response = make_response(
+            jsonify(anime_dict),
+            200,
+        )
+
+        return response
+    
+    def post(self):
+        data = request.get_json()
+        new_anime = Anime(
+            title=data['title'],
+            description=data['description'],
+            image_url=data['image_url'],
+            genre=data['genre']
+        )
+        db.session.add(new_anime)
+        db.session.commit()
+        return new_anime.to_dict()
+    
+    
+class AnimesByID(Resource):
+    
+    
+    def get(self,id):
+        anime = Anime.query.filter_by(id=id).first()
+        
+        if not anime:
+            abort(404, 'Anime not found')
+            
+        anime_dict = anime.to_dict()
+        
+        response = make_response(
+            jsonify(anime_dict),
+            200
         )
         return response
-
-#login route
-class Login(Resource):
-    def post(self):
-        try:
-            user = User.query.filter_by(email=request.get_json()['email']).first()
-            if user == None: 
-                return make_response("this email does not exist", 404)
-            print(user.authenticate(request.get_json()['password']))
-            if user and user.authenticate(request.get_json()['password']):
-                session['user_id'] = user.id
-                response = make_response(
-                    user.to_dict(),
-                    200
-            ) 
-            else: 
-                response = make_response("incorrect password",404)
-            return response
-        except:
-            abort(401, "Incorrect Email or Password")
-
-#logout route
-class Logout(Resource):
-    def delete(self):
-        session['user_id'] = None
-        response = make_response('', 204)
+    
+    def patch(self, id):
+        anime = Anime.query.filter_by(id=id).first()
+        
+        if not anime:
+            abort(404, 'Anime not found')
+            
+        data = request.get_json()
+        for key in data:
+            setattr(anime, key, data[key])
+            
+        db.session.add(anime)
+        db.session.commit()
+        
+        response = make_response(
+            anime.to_dict(),
+            200,
+        )
+        
         return response
+    
+    def delete(self, id):
+        anime = Anime.query.filter_by(id=id).first()
+        
+        if not anime:
+            abort(404, 'Anime not found')
+            
+        db.session.delete(anime)
+        db.session.commit()
+        
+        response = make_response(
+            '',
+            204,
+        )
+        
+        return response
+
+
+class Mangas(Resource):
+    def get(self):
+        mangas = Manga.query.all()
+        manga_dict = [manga.to_dict() for manga in mangas]
+
+        response = make_response(
+            jsonify(manga_dict),
+            200,
+        )
+
+        return response
+    
+    def post(self):
+        data = request.get_json()
+        new_manga = Manga(
+            title=data['title'],
+            description=data['description'],
+            image_url=data['image_url'],
+            genre=data['genre']
+        )
+        db.session.add(new_manga)
+        db.session.commit()
+    
+        return new_manga.to_dict()
+    
+    
+class MangasByID(Resource):
+    def get(self, id):
+        manga = Manga.query.filter_by(id=id).first()
+        
+        if not manga:
+            abort(404, 'Manga not found')
+            
+        manga_dict = manga.to_dict()
+        
+        response = make_response(
+            jsonify(manga_dict),
+            200
+        )
+        return response
+    
+    def patch(self, id):
+        manga = Manga.query.filter_by(id=id).first()
+        
+        if not manga:
+            abort(404, 'Manga not found')
+            
+        data = request.get_json()
+        for key in data:
+            setattr(manga, key, data[key])
+            
+        db.session.add(manga)
+        db.session.commit()
+        
+        response = make_response(
+            manga.to_dict(),
+            200,
+        )
+        
+        return response
+    
+    def delete(self, id):
+        manga = Manga.query.filter_by(id=id).first()
+        
+        if not manga:
+            abort(404, 'Manga not found')
+            
+        db.session.delete(manga)
+        db.session.commit()
+        
+        response = make_response(
+            '',
+            204,
+        )
+        
+        return response
+
+class Characters(Resource):
+    def get(self):
+        characters = Character.query.all()
+        character_dict = [character.to_dict() for character in characters]
+
+        response = make_response(
+            jsonify(character_dict),
+            200,
+        )
+
+        return response
+    
+    def post(self):
+        data = request.get_json()
+        new_character = Character(
+            name=data['name'],
+            image_url=data['image_url'],
+            bio = data['bio'],
+            tier=data['tier'],
+            power=data['power'],
+        )
+        db.session.add(new_character)
+        db.session.commit()
+        return new_character.to_dict()
+    
+    
+    
+class CharactersByID(Resource):
+    
+    
+    def get(self,id):
+        character = Character.query.filter_by(id=id).first()
+        
+        if not character:
+            abort(404, 'Character not found')
+            
+        character_dict = character.to_dict()
+        
+        response = make_response(
+            jsonify(character_dict),
+            200
+        )
+        return response
+    
+    def patch(self, id):
+        character = Character.query.filter_by(id=id).first()
+        
+        if not character:
+            abort(404, 'Character not found')
+            
+        data = request.get_json()
+        for key in data:
+            setattr(character, key, data[key])
+            
+        db.session.add(character)
+        db.session.commit()
+        
+        response = make_response(
+            character.to_dict(),
+            200,
+        )
+        
+        return response
+    
+    def delete(self, id):
+        character = Character.query.filter_by(id=id).first()
+        
+        if not character:
+            abort(404, 'Character not found')
+            
+        db.session.delete(character)
+        db.session.commit()
+        
+        response = make_response(
+            '',
+            204,
+        )
+        
+        return response
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    
+    
+    username = request.get_json().get('username')
+    password = request.get_json().get('password')
+    confirm_password = request.get_json().get('confirmPassword')
+
+    if username and password and confirm_password:
+        if password == confirm_password:
+            # Create a new User instance with the retrieved values
+            new_user = User(username=username)
+            new_user.password_hash = password
+
+            db.session.add(new_user)
+            db.session.commit()
+
+            session['user_id'] = new_user.id
+            return new_user.to_dict(), 201
+        return {'message': 'Passwords do not match'}, 422
+    return {'message': 'Username, password, and confirm password are required'}, 422
+
+# /login
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.get_json()['username']
+    password = request.get_json()['password']
+
+    user = User.query.filter_by(username=username).first()
+    if user:
+        if user.authenticate(password):
+            session['user_id'] = user.id
+            return user.to_dict(), 200
+    return {'message': '401: Unauthorized'}, 401
+    
+# /check_session
+@app.route('/check_session', methods=['GET'])
+def check_session():
+    if session.get('user_id'):
+    # if session['user_id']:
+        user = User.query.filter_by(id=session['user_id']).first()
+        if user:
+            return user.to_dict(), 200
+    return {'message': '401: Unauthorized'}, 401
+
+# /logout
+@app.route('/logout', methods=['DELETE'])
+def logout():
+    if session.get('user_id'):
+    # if session['user_id']:
+        session['user_id'] = None
+        return {'message': '204: No Content'}, 204
+    return {'message': '401: Unauthorized'}, 401
+
 
 
     
   
 #Routes for Resources
-api.add_resource(Logout, '/logout')
-api.add_resource(Login, '/login')
-api.add_resource(Signup, '/signup')
-api.add_resource(LikesByID, '/likes/<int:id>')
-api.add_resource(Likes, '/likes')
-api.add_resource(CommentsByID, '/comments/<int:id>')
-api.add_resource(Comments, '/comments')
+api.add_resource(MangasByID, '/manga/<int:id>', endpoint='mangaID')
+api.add_resource(CharactersByID, '/characters/<int:id>', endpoint='characterID')
+api.add_resource(Characters, '/characters', endpoint='character')
+api.add_resource(Mangas, '/manga', endpoint='manga')
+api.add_resource(AnimesByID, '/anime/<int:id>', endpoint='animeID')
+api.add_resource(Animes, '/anime', endpoint='anime')
 api.add_resource(PostsByID, '/posts/<int:id>')
-api.add_resource(Posts, '/posts')
-api.add_resource(UsersByID, '/users/<int:id>')   
-api.add_resource(Users, '/users')  
-api.add_resource(Home, '/home')
+api.add_resource(Posts, '/posts', endpoint='posts')
+api.add_resource(UsersByID, '/users/<int:id>', endpoint='usersId')   
+api.add_resource(Users, '/users/', endpoint='users')  
+
+
 
 
 @app.errorhandler(NotFound)
